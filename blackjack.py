@@ -49,6 +49,7 @@ while(gamedone == 0):
     makeDeck()
     pcards =[]
     dcards = []
+    betamount = 10
 
     #pre game
     print('The entry fee is $10')
@@ -72,7 +73,7 @@ while(gamedone == 0):
             printBoard()
 
             bet = input('How much more money are you going to bet \n')
-            betamount += int(bet) + 10
+            betamount += int(bet)
             print('you now have $' + str(betamount) + ' on the line')
 
         while(turn%2 == 0 and done != 1): #player
@@ -94,7 +95,6 @@ while(gamedone == 0):
             #if the delers cards are less than 18 hit
             if (check(dcards) <= 18):
                 dcards += [cardDealer()]
-                printBoard()
                 turn += 1
             else:
                 partdone += 1
@@ -121,7 +121,7 @@ while(gamedone == 0):
             print('tie')
             tmoney += 10
             done = 1
-        elif (done == 1 and partdone == 2):
+        elif (partdone == 2):
             if (dcards > pcards):
                 print('you lose')
                 tmoney -= betamount
