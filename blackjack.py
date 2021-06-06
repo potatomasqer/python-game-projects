@@ -127,8 +127,8 @@ while(gamedone == 0):
                 tmoney -= betamount
                 done = 1
             else:
-                print('you lose')
-                tmoney -= betamount
+                print('you win')
+                tmoney += betamount
                 done = 1
         if (done == 1):
             n = input('do you want to continue (y,n)')
