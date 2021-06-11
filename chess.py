@@ -24,93 +24,6 @@ def printb():
     print(board[7])
     print("------------------------------------------------")
 
-def movePiece(SLr,SLc,FLr,FLc): #SL - start location FL -final location. dose not check side of player
-    #pawns
-    if (board[SLr][SLc] == 'bP'): #check if FL is valid
-        if ((SLr + 1 == FLr) and (SLc == FLc)):
-            return [1,1] #valid non attacking / pawn
-        elif ((SLr == 2 and SLr + 2 == FLr) and (SLc == FLc)): #specal first move
-            return [1,1] #valid non attacking / pawn
-        elif ((SLr + 1 == FLr) and (SLc + 1 == FLc or SLc - 1 == FLc)):
-            return [2,1] #valid attacking move /pawn
-        else:
-            return [0, 1] #not valid move
-    if (board[SLr][SLc] == 'wP'): #check if FL is valid
-        if ((SLr - 1 == FLr) and (SLc == FLc)):
-            return [1,1] #valid non attacking / cant destroy anything
-        elif ((SLr == 5 and SLr - 2 == FLr) and (SLc == FLc)):
-            return [1,1] #valid non attacking / cant destroy anything
-        elif ((SLr - 1 == FLr) and (SLc - 1 == FLc or SLc + 1 == FLc)):
-            return [2,1] #valid attacking move
-        else:
-            return [0, 1] #not valid move
-    #rooks
-    if (board[SLr][SLc] == 'bR'): #check if FL is valid
-        if (SLr == FLr != SLc == FLc):
-            return [3,2] #valid move attacking or not
-        else:
-            return [0,2] #not valid move
-    if (board[SLr][SLc] == 'wR'): #check if FL is valid
-        if (SLr == FLr != SLc == FLc):
-            return [0,2] #valid move attacking or not
-        else:
-            return [0,2] #not valid move
-    #bishops
-    if (board[SLr][SLc] == 'bB'): #check if FL is valid
-        if (SLr - FLr == SLc - FLc):
-            return [3,3]#valid move attacking or not
-        else:
-            return [0,3] #not valid move
-    if (board[SLr][SLc] == 'wB'): #check if FL is valid
-        if (SLr - FLr == SLc - FLc):
-            return [3,3] #valid move attacking or not
-        else:
-            return [0,3] #not valid move
-    #knights
-    #move in a direction 2 than the other 1
-    if (board[SLr][SLc] == 'bH'):
-        if((SLc + 2 == FLc or SLc - 2 == FLc) and (SLr + 1 == FLr or SLr - 1 == FLr)): #up and down 4
-            return [3,4]
-        if ((SLr + 2 == FLr or SLr - 2 == FLr) and (SLc + 1 == FLc or SLc - 1 == FLc)): #left and right 4
-            return [3,4]
-        else:
-            return [0,4]
-    if (board[SLr][SLc] == 'wH'):
-        if((SLc + 2 == FLc or SLc - 2 == FLc) and (SLr + 1 == FLr or SLr - 1 == FLr)): #up and down 4
-            return [3,4]
-        if ((SLr + 2 == FLr or SLr - 2 == FLr) and (SLc + 1 == FLc or SLc - 1 == FLc)): #left and right 4
-            return [3,4]
-        else:
-            return [0,4]
-    #queen
-    if (board[SLr][SLc] == 'bQ'):
-        if (SLr == FLr != SLc == FLc):
-            return [3,5] #valid move attacking or not
-        if (SLr - FLr == SLc - FLc):
-            return [3,5] #valid move attacking or not
-        else:
-            return [0,5]
-    if (board[SLr][SLc] == 'wQ'):
-        if (SLr == FLr != SLc == FLc):
-            return [3,5] #valid move attacking or not
-        if (SLr - FLr == SLc - FLc):
-            return [3,5] #valid move attacking or not
-        else:
-            return [0,5]
-    #king
-    if (board[SLr][SLc] == 'bK'):
-        if (((SLr + 1 == FLr or SLr - 1 == FLr) or SLr == FLr) or ((SLc + 1 == FLc or SLc -1 == FLc) or SLc == FLc)):
-            return [3,6]
-        else:
-            return [0,6]
-    if (board[SLr][SLc] == 'wK'):
-        if (((SLr + 1 == FLr or SLr - 1 == FLr) or SLr == FLr) or ((SLc + 1 == FLc or SLc -1 == FLc) or SLc == FLc)):
-            return [3,6]
-        else:
-            return [0,6]
-    if (board[SLr][SLc] == '0 '):
-        return [0,0]
-
 def sideCheck(pos,side,temp):
     if side == 0: #white 
         T = board[temp[0]][temp[1]]
@@ -126,279 +39,278 @@ def crossCheck(SLr,SLc,FLr,FLc,side):
     #the goal is to draw a line and see if the 
     #check is valid first
     done = 0 #stops while loops when 1
-    pos = [] #list of all xy cords  
-    piece = movePiece(SLr,SLc,FLr,FLc) # first number is if its valid second is what piece
-    if (piece[0] == 3): #valid if empity
-        if (piece[1] == 2): #rook
-            for i in range(4):
-                done = 0
-                while (done == 0): # loop through all cords in one direction
-                    temp = [SLr,SLc]
-                    if i == 0: #down
-                        temp[1] += 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: #something is in the way
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    elif i == 1: #up
-                        temp[1] -= 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    elif i == 2: #right
-                        temp[0] += 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    elif i == 3: #left
-                        temp[0] -= 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-        elif (piece[1] == 3): #bishop
-            for i in range(4):
-                done = 0
-                while (done == 0):
-                    temp = [SLr,SLc]
-                    if i == 0: #down right
-                        temp[1] += 1
-                        temp[0] += 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    if i == 1: #down left
-                        temp[1] -= 1
-                        temp[0] += 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    if i == 2: #up left
-                        temp[1] -= 1
-                        temp[0] -= 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    if i == 3: #up right
-                        temp[1] += 1
-                        temp[0] -= 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-        elif (piece[1] == 4): #knight specal
-            for i in range(4):
-                for a in range(1): #i is main direction a is side direction
-                    temp = [SLr,SLc]
-                    if i == 0: #up
-                        temp[0] -= 2
-                        if a == 0: #left
-                            temp[1] -= 1
-                        else:
-                            temp[1] += 1
-
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + temp
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                    if i == 1: #down
-                        temp[0] += 2
-                        if a == 0: #left
-                            temp[1] -= 1
-                        else:
-                            temp[1] += 1
-
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                    if i == 2: #right
-                        temp[1] += 2
-                        if a == 0: #up
-                            temp[0] -= 1
-                        else:
-                            temp[0] += 1
-
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                    if i == 3: #left
-                        temp[1] -= 2
-                        if a == 0: #up
-                            temp[0] -= 1
-                        else:
-                            temp[0] += 1
-
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                    print(temp,'temp')
-                    print(pos,'pos')
-        elif (piece[1] == 5): #queen. the rook and bishop combined
-            for i in range(7):
-                done = 0
-                while (done == 0):
-                    temp = [SLr,SLc]
-                    if i == 0: #down right
-                        temp[0] += 1
-                        temp[1] += 1
-
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    if i == 1: #down left
-                        temp[0] -= 1
-                        temp[1] += 1
-
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    if i == 2: #up left
-                        temp[0] -= 1
-                        temp[1] -= 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    if i == 3: #up right
-                        temp[0] += 1
-                        temp[1] -= 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    if i == 4: #down
-                        temp[1] += 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: #something is in the way
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    elif i == 5: #up
-                        temp[1] -= 1
-                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if (board[temp[0]][temp[1]] == '0 '):
-                                pos = pos + [temp]
-                            else: 
-                                temp = sideCheck(pos,side,temp)
-                                done = 1
-                    elif i == 6: #right
-                        temp[0] += 1
+    pos = [] #list of all xy cords
+    piece = board[SLr][SLc]
+    if (piece == 'bR' or piece == 'wR'): #rook
+        for i in range(4):
+            done = 0
+            while (done == 0): # loop through all cords in one direction
+                temp = [SLr,SLc]
+                if i == 0: #down
+                    temp[1] += 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: #something is in the way
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+                elif i == 1: #up
+                    temp[1] -= 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
                             temp = sideCheck(pos,side,temp)
                             done = 1
-                    elif i == 7: #left
+                elif i == 2: #right
+                    temp[0] += 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+                elif i == 3: #left
+                    temp[0] -= 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+    elif (piece == 'bB' or piece == 'wB'): #bishop
+        for i in range(4):
+            done = 0
+            while (done == 0):
+                temp = [SLr,SLc]
+                if i == 0: #down right
+                    temp[1] += 1
+                    temp[0] += 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+                if i == 1: #down left
+                    temp[1] -= 1
+                    temp[0] += 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+                if i == 2: #up left
+                    temp[1] -= 1
+                    temp[0] -= 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+                if i == 3: #up right
+                    temp[1] += 1
+                    temp[0] -= 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+    elif (piece == 'bH' or piece == 'wH'): #knight specal
+        for i in range(4):
+            for a in range(1): #i is main direction a is side direction
+                temp = [SLr,SLc]
+                if i == 0: #up
+                    temp[0] -= 2
+                    if a == 0: #left
+                        temp[1] -= 1
+                    else:
+                        temp[1] += 1
+
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + temp
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                if i == 1: #down
+                    temp[0] += 2
+                    if a == 0: #left
+                        temp[1] -= 1
+                    else:
+                        temp[1] += 1
+
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                if i == 2: #right
+                    temp[1] += 2
+                    if a == 0: #up
+                        temp[0] -= 1
+                    else:
+                        temp[0] += 1
+
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                if i == 3: #left
+                    temp[1] -= 2
+                    if a == 0: #up
+                        temp[0] -= 1
+                    else:
+                        temp[0] += 1
+
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                print(temp,'temp')
+                print(pos,'pos')
+    elif (piece == 'bQ' or piece == 'wQ'): #queen. the rook and bishop combined
+        for i in range(7):
+            done = 0
+            while (done == 0):
+                temp = [SLr,SLc]
+                if i == 0: #down right
+                    temp[0] += 1
+                    temp[1] += 1
+
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+                if i == 1: #down left
+                    temp[0] -= 1
+                    temp[1] += 1
+
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+                if i == 2: #up left
+                    temp[0] -= 1
+                    temp[1] -= 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+                if i == 3: #up right
+                    temp[0] += 1
+                    temp[1] -= 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+                if i == 4: #down
+                    temp[1] += 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: #something is in the way
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+                elif i == 5: #up
+                    temp[1] -= 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+                elif i == 6: #right
+                    temp[0] += 1
+                    if (board[temp[0]][temp[1]] == '0 '):
+                        pos = pos + [temp]
+                    else: 
+                        temp = sideCheck(pos,side,temp)
+                        done = 1
+                elif i == 7: #left
+                    temp[0] -= 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if (board[temp[0]][temp[1]] == '0 '):
+                            pos = pos + [temp]
+                        else: 
+                            temp = sideCheck(pos,side,temp)
+                            done = 1
+    elif (piece == 'bK' or piece == 'wK'): #king 
+        for i in range(2):
+            for a in range(2): #i up and down a is left and right
+                temp = [SLr,SLc]
+                if i == 0: #non moving
+                    if a == 1: #up
                         temp[0] -= 1
                         if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
                             if (board[temp[0]][temp[1]] == '0 '):
                                 pos = pos + [temp]
                             else: 
                                 temp = sideCheck(pos,side,temp)
-                                done = 1
-        elif (piece[1] == 6): #king 
-            for i in range(2):
-                for a in range(2): #i up and down a is left and right
-                    temp = [SLr,SLc]
-                    if i == 0: #non moving
-                        if a == 1: #up
-                            temp[0] -= 1
-                            if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                                if (board[temp[0]][temp[1]] == '0 '):
-                                    pos = pos + [temp]
-                                else: 
-                                    temp = sideCheck(pos,side,temp)
-                        elif a == 2: #down
-                            temp[0] += 1
-                            if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                                if (board[temp[0]][temp[1]] == '0 '):
-                                    pos = pos + [temp]
-                                else: 
-                                    temp = sideCheck(pos,side,temp)
-                    if i == 1: #left
-                        temp[1] -= 1
+                    elif a == 2: #down
+                        temp[0] += 1
                         if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if a == 9: #nonmoving
-                                if (board[temp[0]][temp[1]] == '0 '):
-                                    pos = pos + [temp]
-                                else: 
-                                    temp = sideCheck(pos,side,temp)
-                        elif a == 1: #up
-                            temp[0] -= 1
-                            if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                                if (board[temp[0]][temp[1]] == '0 '):
-                                    pos = pos + [temp]
-                                else: 
-                                    temp = sideCheck(pos,side,temp)
-                        elif a == 2: #down
-                            temp[0] += 1
-                            if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                                if (board[temp[0]][temp[1]] == '0 '):
-                                    pos = pos + [temp]
-                                else: 
-                                    temp = sideCheck(pos,side,temp)
-                    if i == 2: #right
-                        temp[1] += 1
+                            if (board[temp[0]][temp[1]] == '0 '):
+                                pos = pos + [temp]
+                            else: 
+                                temp = sideCheck(pos,side,temp)
+                if i == 1: #left
+                    temp[1] -= 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if a == 9: #nonmoving
+                            if (board[temp[0]][temp[1]] == '0 '):
+                                pos = pos + [temp]
+                            else: 
+                                temp = sideCheck(pos,side,temp)
+                    elif a == 1: #up
+                        temp[0] -= 1
                         if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                            if a == 9: #nonmoving
-                                if (board[temp[0]][temp[1]] == '0 '):
-                                    pos = pos + [temp]
-                                else: 
-                                    temp = sideCheck(pos,side,temp)
-                        elif a == 1: #up
-                            temp[0] -= 1
-                            if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                                if (board[temp[0]][temp[1]] == '0 '):
-                                    pos = pos + [temp]
-                                else: 
-                                    temp = sideCheck(pos,side,temp)
-                        elif a == 2: #down
-                            temp[0] += 1
-                            if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
-                                if (board[temp[0]][temp[1]] == '0 '):
-                                    pos = pos + [temp]
-                                else: 
-                                    temp = sideCheck(pos,side,temp)
-    if (piece[0] == 1):#pawn
+                            if (board[temp[0]][temp[1]] == '0 '):
+                                pos = pos + [temp]
+                            else: 
+                                temp = sideCheck(pos,side,temp)
+                    elif a == 2: #down
+                        temp[0] += 1
+                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                            if (board[temp[0]][temp[1]] == '0 '):
+                                pos = pos + [temp]
+                            else: 
+                                temp = sideCheck(pos,side,temp)
+                if i == 2: #right
+                    temp[1] += 1
+                    if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                        if a == 9: #nonmoving
+                            if (board[temp[0]][temp[1]] == '0 '):
+                                pos = pos + [temp]
+                            else: 
+                                temp = sideCheck(pos,side,temp)
+                    elif a == 1: #up
+                        temp[0] -= 1
+                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                            if (board[temp[0]][temp[1]] == '0 '):
+                                pos = pos + [temp]
+                            else: 
+                                temp = sideCheck(pos,side,temp)
+                    elif a == 2: #down
+                        temp[0] += 1
+                        if (temp[0] >= 0 and temp[0] <= 8) and (temp[1] >= 0 and temp[1] <= 8):
+                            if (board[temp[0]][temp[1]] == '0 '):
+                                pos = pos + [temp]
+                            else: 
+                                temp = sideCheck(pos,side,temp)
+    if (piece == 'bP' or piece == 'wP'):#pawn
         #forword 1 (up for white down for black)
         if side == 0: #white
             if SLr == 6:
@@ -418,7 +330,7 @@ def crossCheck(SLr,SLc,FLr,FLc,side):
             else:
                 if board[SLr-1][SLc] == '0 ':
                     pos += [SLr-1,SLc]
-    if(piece[0] == 2):#pawn on the attack 
+    
         #up left/right
         if side == 0:
             if board[SLr-1][SLc+1] != '0 ':
@@ -441,7 +353,6 @@ def crossCheck(SLr,SLc,FLr,FLc,side):
 
 
     
-    return [[piece],[pos]]
 
 def moveChecker(SLr,SLc,FLr,FLc,side):
     #is the move there
