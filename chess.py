@@ -315,42 +315,49 @@ def crossCheck(SLr,SLc,FLr,FLc,side):
         if side == 0: #white
             if SLr == 6:
                 if board[5][SLc] == '0 ':
-                    pos += [5,SLc]
+                    pos = pos + [5,SLc]
                 if board[4][SLc] == '0 ':
-                    pos += [4,SLc]
+                    pos = pos + [4,SLc]
             else:
                 if board[SLr-1][SLc] == '0 ':
-                    pos += [SLr-1,SLc]
+                    pos = pos + [SLr-1,SLc]
         if side == 1: #black
             if SLr == 1:
                 if board[3][SLc] == '0 ':
-                    pos += [4,SLc]
+                    pos = pos + [4,SLc]
                 if board[2][SLc] == '0 ':
-                    pos += [3,SLc]
+                    pos = pos + [3,SLc]
             else:
                 if board[SLr-1][SLc] == '0 ':
-                    pos += [SLr-1,SLc]
+                    pos = pos + [SLr-1,SLc]
     
         #up left/right
         if side == 0:
             if board[SLr-1][SLc+1] != '0 ':
                 T = board[SLr-1][SLc+1]
                 if (T == 'bP' or T == 'bR' or T == 'bH' or T == 'bK' or T == 'bQ' or T == 'bB'):
-                    pos += [SLr-1,SLc+1]
+                    pos = pos + [SLr-1,SLc+1]
             if board[SLr-1][SLc-1] != '0 ':
                 T = board[SLr-1][SLc-1]
                 if (T == 'bP' or T == 'bR' or T == 'bH' or T == 'bK' or T == 'bQ' or T == 'bB'):
-                    pos += [SLr-1,SLc-1]
+                    pos = pos + [SLr-1,SLc-1]
         if side == 1:
             if board[SLr+1][SLc+1] != '0 ':
                 T = board[SLr+1][SLc+1]
                 if (T == 'wP' or T == 'wR' or T == 'wH' or T == 'wK' or T == 'wQ' or T == 'wB'):
-                    pos += [SLr+1,SLc+1]
+                    pos = pos + [SLr+1,SLc+1]
             if board[SLr-1][SLc-1] != '0 ':
                 T = board[SLr+1][SLc-1]
                 if (T == 'wP' or T == 'wR' or T == 'wH' or T == 'wK' or T == 'wQ' or T == 'wB'):
-                    pos += [SLr+1,SLc-1]
+                    pos = pos + [SLr+1,SLc-1]
+    
+    if len(pos) != 0:
+        postemp = []
+        for i in range(int(len(pos)/2)):
+            postemp = postemp + [[pos[i*2],pos[i*2+1]]]
+        pos = postemp
 
+    return pos
 
     
 
@@ -362,13 +369,29 @@ def moveChecker(SLr,SLc,FLr,FLc,side):
     else: 
         return False
 
-    
+def checkmateFind():
+    if board.count('wK') != 1:
+        return 1
+    elif board.count('bK') !=1:
+        return 2
+    else:
+        return 0
+def ckeckmate():
+    mate = checkmateFind
+    if mate == 1:
+        print('black wins')
+        gameRun = 1
+    if mate == 2:
+        print('white wins')
+        gameRun = 1
+
 
 
 #Game start
 print('Welcome to chess, this game will be a bit diffrent than most other games you have played')
 print('to make a move you must input you starting cords starting at 0,0 from the top left and down to 7,7 at the bottom left')
 print('to finish a move you have to also input the final cords for that piece, if it dosnt work you have to do it again')
+print('to end the game you have to capture the opposing king, so regular chess after the checkmate')
 print('have fun')
 print('as most of my games choices between two words are answered with numbers so let us continue')
 run = 0
@@ -407,6 +430,14 @@ while run == 0:
                 SLc = int(input('start col: '))
                 FLr = int(input('end row: '))
                 FLc = int(input('end col: '))
+                move = moveChecker(SLr,SLc,FLr,FLc,side)
+                if move:
+                    temp = board[SLr][SLc]
+                    board[SLr][SLc] = '0 '
+                    board[FLr][FLc] = temp
+                    turn = 1
+                else:
+                    temp ='0 '
 
 
     else:

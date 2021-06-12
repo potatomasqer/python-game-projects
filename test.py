@@ -1,14 +1,8 @@
-ly = []
-lz = [4,3]
-la = [6,7]
-ly = ly + [lz]
-ly = ly + [la]
-ly = ly + [lz]
-ly = ly + [la]
-ly = ly + [lz]
-ly = ly + [la]
-ly = ly + [lz]
-ly = ly + [la]
-ly = ly + [lz]
-ly = ly + [la]
-print(ly)
+tL = [1,2,3,4]
+ft = []
+
+print(len(tL)/2)
+for i in range(int(len(tL)/2)):
+    ft = ft + [[tL[i*2],tL[i*2+1]]]
+    print(i)
+print(ft)
