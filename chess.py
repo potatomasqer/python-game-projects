@@ -35,7 +35,7 @@ def sideCheck(pos,side,temp):
     return temp
 
 
-def crossCheck(SLr,SLc,FLr,FLc,side):
+def crossCheck(SLr,SLc,side):
     #the goal is to draw a line and see if the 
     #check is valid first
     done = 0 #stops while loops when 1
@@ -363,20 +363,24 @@ def crossCheck(SLr,SLc,FLr,FLc,side):
 
 def moveChecker(SLr,SLc,FLr,FLc,side):
     #is the move there
-    move = crossCheck(SLr,SLc,FLr,FLc,side)
+    move = crossCheck(SLr,SLc,side)
     if ([FLr,FLc] in move):
         return True
     else: 
         return False
 
 def checkmateFind():
-    if board.count('wK') != 1:
+    boardtmp = []
+    for i in board:
+        boardtmp += i
+    if boardtmp.count('wK') != 1:
         return 1
-    elif board.count('bK') !=1:
+    elif boardtmp.count('bK') !=1:
         return 2
     else:
         return 0
-def ckeckmate():
+
+def checkmate():
     mate = checkmateFind
     if mate == 1:
         print('black wins')
@@ -384,6 +388,41 @@ def ckeckmate():
     if mate == 2:
         print('white wins')
         gameRun = 1
+
+def ai(side):
+    #get a list of all pieces and there locations
+    #number of pieces
+    #location of each piece
+    boardtmp = []
+    for i in board:
+        boardtmp += i
+
+    if side == 0:
+        units = boardtmp.count('wK','wP','wB','wQ','wR','wH')
+        uids = []
+        for i in range(units):
+            found = 0
+            num = 0
+            while found == 0:
+                if boardtmp[num] == 'wK' or boardtmp[num] == 'wP' or boardtmp[num] == 'wB' or boardtmp[num] == 'wQ' or boardtmp[num] == 'wR' or boardtmp[num] == 'wH':
+                    uids += num
+                    found = 1
+                else:
+                    num += 1 
+                if num > 63:
+                    found = 1
+        #take the list of 0 - 63 and make it 8 by 8
+        ucords = []
+        for i in uids:
+            ucords = ucords + [[str(int(i/8)),str(int(i%8))]]
+        allpos = []
+        for i in ucords:
+            allpos = allpos + crossCheck(i[0],i[1],0)
+
+
+
+    if side == 1:
+        units = boardtmp.count('bK','bP','bB','bQ','bR','bH')
 
 
 
@@ -401,12 +440,35 @@ while run == 0:
     if numb == 1:
         #needs an ai
         side = int(input('what side will you be on 0 white 1 black: '))
+        gameRun = 0 
+        turn = 0
+        printb()
+        while gameRun == 0:
+            while (turn == 0):
+                if side == 0:
+                    print('white turn')
+                    SLr = int(input('start row: '))
+                    SLc = int(input('start col: '))
+                    FLr = int(input('end row: '))
+                    FLc = int(input('end col: '))
+                    move = moveChecker(SLr,SLc,FLr,FLc,side)
+                    if move:
+                        temp = board[SLr][SLc]
+                        board[SLr][SLc] = '0 '
+                        board[FLr][FLc] = temp
+                        turn = 1
+                    else:
+                        temp ='0 '
+                else:
+                    print('white turn')
+                    
+
     if numb == 2:
         print('chose who goes first on your end and we can get started')
         gameRun = 0 
         turn = 0
+        printb()
         while gameRun == 0:
-            printb()
             while (turn == 0):
                 print('white turn')
                 side = 0
@@ -423,7 +485,8 @@ while run == 0:
                 else:
                     temp ='0 '
             printb()
-            while(turn == 1):
+            checkmate()
+            while(turn == 1 and gameRun != 1):
                 print('black turn')
                 side = 1
                 SLr = int(input('start row: '))
@@ -438,6 +501,8 @@ while run == 0:
                     turn = 1
                 else:
                     temp ='0 '
+            printb()
+            checkmate()
 
 
     else:
