@@ -12,4 +12,8 @@ for i in ft:
 print(fttmp)
 print(fttmp.count(1))
 
-print(int(1/8))
+
+allpos = []
+for i in range(4):
+    allpos = allpos + ft
+print(allpos)
