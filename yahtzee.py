@@ -19,7 +19,7 @@ def diceManager(dice,locked):
     for i in range(len(dice)):
         if dice.count(i) == 0:
             #skiping locked id's
-            dice[i] = newDice
+            dice[i] = newDice()
     return dice
 
 def printb(Score):
@@ -28,15 +28,15 @@ def printb(Score):
     print('')
     print('Aces	Any combination	The sum of dice with the number 1: ' + str(Score[0]))
     print('')
-    print('Twos	Any combination	The sum of dice with the number 2' + str(Score[1]))
+    print('Twos	Any combination	The sum of dice with the number 2: ' + str(Score[1]))
     print('')
     print('Threes Any combination The sum of dice with the number 3: ' + str(Score[2]))
     print('')
-    print('Fours Any combination The sum of dice with the number 4' + str(Score[3]))
+    print('Fours Any combination The sum of dice with the number 4: ' + str(Score[3]))
     print('')
     print('Fives Any combination The sum of dice with the number 5: ' + str(Score[4]))
     print('')
-    print('Sixes Any combination The sum of dice with the number 6' + str(Score[5]))
+    print('Sixes Any combination The sum of dice with the number 6: ' + str(Score[5]))
     print('')
     print('_______________________________________________________________')
     print('Lower section')
@@ -60,8 +60,8 @@ def movemaker():
     movedone = 0
     move = [] # list of locked ids
     while movedone == 0:
-        temp = input('what dice would you like to lock? left to right 0-4, input -1 to stop picking')
-        if temp != '-1':
+        temp = input('what dice would you like to lock? left to right 1-5, input 6 to stop picking: ')
+        if temp != '6':
             move += [int(temp)]
         else:
             movedone = 1
@@ -108,19 +108,32 @@ def scoremaker(dice,score):
         score[7] = 20 
     if dice.count(6) == 4 and 24 > score[7]:
         score[7] = 24
-    #5 of a kind
-    if dice.count(1) == 5 and 3 > score[8]:
-        score[8] = 50
-    if dice.count(2) == 5 and 6 > score[8]:
-        score[8] = 50
-    if dice.count(3) == 5 and 9 > score[8]:
-        score[8] = 50
-    if dice.count(4) == 5 and 12 > score[8]:
-        score[8] =  50
-    if dice.count(5) == 5 and 15 > score[8]:
-        score[8] = 50
-    if dice.count(6) == 5 and 18 > score[8]:
-        score[8] = 50
+    #full house
+    for i in range(5):
+        for a in range(5):
+            if dice.count(i+1) == 3:
+                if dice.count(a+1) == 2:
+                    score[8] == 25
+    #Low Straight
+    if dice.count(1) == 1 and dice.count(2) == 1 and dice.count(3) == 1 and dice.count(4) == 1:
+        score[9] = 30
+    if dice.count(2) == 1 and dice.count(3) == 1 and dice.count(4) == 1 and dice.count(5) == 1:
+        score[9] = 30
+    if dice.count(3) == 1 and dice.count(4) == 1 and dice.count(5) == 1 and dice.count(6) == 1:
+        score[9] = 30
+    #high streaght
+    if dice.count(1) == 1 and dice.count(2) == 1 and dice.count(3) == 1 and dice.count(4) == 1 and dice.count(5):
+        score[10] = 40
+    if dice.count(6) == 1 and dice.count(2) == 1 and dice.count(3) == 1 and dice.count(4) == 1 and dice.count(5):
+        score[10] = 40
+    #YAHTZEE
+    for a in range(5):
+        if dice.count(a+1) == 5:
+            score[11] = 50
+    #chance
+    score[12] = dice[0] + dice[1] + dice[2] + dice[3] + dice[4]
+    return score
+
 
 prun = 0
 while prun == 0:
@@ -128,8 +141,8 @@ while prun == 0:
     print('Welcome to yahtzee a simple game of rolling die and counting score')
     numb = input('How many people will be playing: ')
     numb = int(numb)
-    Score = [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    printb(Score)
+    score = [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    printb(score)
     while gamerun == 0:
         for Pid in range(numb):
             print('Player ' + str(Pid+1) + "'s turn")
@@ -149,12 +162,8 @@ while prun == 0:
             dice = diceManager(dice,move)
             print(dice)
             print('out of spins')
-            
-
-
-
-
-
+            score = scoremaker(dice,score)
+            printb(score)
 
         if numb == 0:
             gamerun == 1
