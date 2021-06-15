@@ -1,10 +1,14 @@
 tL = [1,2,3,4]
 ft = []
 
-print(len(tL)/2)
+tmp = []
+tmp2 =[]
+for i in range(2):
+    tmp = tmp + [tmp2]
+print(tmp)
+
 for i in range(int(len(tL)/2)):
     ft = ft + [[tL[i*2],tL[i*2+1]]]
-    print(i)
 print(ft)
 fttmp = []
 for i in ft:
@@ -17,3 +21,5 @@ allpos = []
 for i in range(4):
     allpos = allpos + ft
 print(allpos)
+
+print(str(1) + ' players')
