@@ -17,7 +17,7 @@ def diceManager(dice,locked):
     #dice is a list of all 5 die
     #locked is a list of the ids of locked dice
     for i in range(len(dice)):
-        if dice.count(i) == 0:
+        if locked.count(dice[i]) == 0:
             #skiping locked id's
             dice[i] = newDice()
     return dice
@@ -60,8 +60,8 @@ def movemaker():
     movedone = 0
     move = [] # list of locked ids
     while movedone == 0:
-        temp = input('what dice would you like to lock? left to right 1-5, input 6 to stop picking: ')
-        if temp != '6':
+        temp = input('what dice would you like to lock? left to right 0-4, input -1 to stop picking: ')
+        if temp != '-1':
             move += [int(temp)]
         else:
             movedone = 1
