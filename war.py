@@ -27,19 +27,19 @@ while len(deck1) != 0 and len(deck2) != 0:
             tdeck1 = [deck1[0], deck1[1], deck1[2]]
             tdeck2 = [deck2[0], deck2[1], deck2[2]]
             deck1.pop(0)
-            deck1.pop(1)
-            deck1.pop(2)
+            deck1.pop(0)
+            deck1.pop(0)
             deck2.pop(0)
-            deck2.pop(1)
-            deck2.pop(2)
+            deck2.pop(0)
+            deck2.pop(0)
             if tdeck1[2] == tdeck2[2]:
                 if randint(0,1) == 0:
-                    deck2.append(tdeck1[0])
-                    deck2.append(tdeck1[1])
-                    deck2.append(tdeck1[2])
-                    deck2.append(tdeck2[0])
-                    deck2.append(tdeck2[1])
-                    deck2.append(tdeck2[2])
+                    deck1.append(tdeck1[0])
+                    deck1.append(tdeck1[1])
+                    deck1.append(tdeck1[2])
+                    deck1.append(tdeck2[0])
+                    deck1.append(tdeck2[1])
+                    deck1.append(tdeck2[2])
                 else:
                     deck2.append(tdeck1[0])
                     deck2.append(tdeck1[1])
@@ -49,12 +49,12 @@ while len(deck1) != 0 and len(deck2) != 0:
                     deck2.append(tdeck2[2])
                 
             elif tdeck1[2] > tdeck2[2]:
-                deck2.append(tdeck1[0])
-                deck2.append(tdeck1[1])
-                deck2.append(tdeck1[2])
-                deck2.append(tdeck2[0])
-                deck2.append(tdeck2[1])
-                deck2.append(tdeck2[2])
+                deck1.append(tdeck1[0])
+                deck1.append(tdeck1[1])
+                deck1.append(tdeck1[2])
+                deck1.append(tdeck2[0])
+                deck1.append(tdeck2[1])
+                deck1.append(tdeck2[2])
             else:
                 deck2.append(tdeck1[0])
                 deck2.append(tdeck1[1])
