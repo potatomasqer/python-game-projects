@@ -28,8 +28,8 @@ def printb():
     print("------------------------------------------------")
 
 def sideCheck(pos,side,temp):
+    T = board[temp[0]][temp[1]]
     if side == 0: #white 
-        T = board[temp[0]][temp[1]]
         if (T == 'bP' or T == 'bR' or T == 'bH' or T == 'bK' or T == 'bQ' or T == 'bB'):
             pos = pos + [temp]
     elif  side == 1: #black
@@ -551,7 +551,7 @@ print('have fun')
 print('as most of my games choices between two words are answered with numbers so let us continue')
 run = 0
 while run == 0:
-    numb = input('will this be a 1 or 2 player game: ')
+    numb = input('will this be a 1 or 2 player game: "WARNING THE AI DOSE NOT WORK RN. ITS BEING FIXED CHOOSE 2 PLAYER')
     numb = int(numb)
     if numb == 1:
         #needs an ai
@@ -603,7 +603,7 @@ while run == 0:
                         temp ='0 '
                 else:
                     print('black turn')
-                    move = ai(0)
+                    move = ai(1)
                     move2 = moveChecker(move[0][0],move[0][1],move[1][0],move[1][1],1)
                     if move2:
                         temp = board[SLr][SLc]
