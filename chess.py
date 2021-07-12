@@ -51,7 +51,7 @@ def crossCheck(SLr,SLc,side):
                 temp = [SLr,SLc]
                 if i == 0: #down
                     temp[0] += 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: #something is in the way
@@ -61,7 +61,7 @@ def crossCheck(SLr,SLc,side):
                         done = 1
                 elif i == 1: #up
                     temp[0] -= 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -71,7 +71,7 @@ def crossCheck(SLr,SLc,side):
                         done = 1
                 elif i == 2: #right
                     temp[1] += 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -81,7 +81,7 @@ def crossCheck(SLr,SLc,side):
                         done = 1
                 elif i == 3: #left
                     temp[1] -= 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -98,7 +98,7 @@ def crossCheck(SLr,SLc,side):
                 if i == 0: #down right
                     temp[1] += 1
                     temp[0] += 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -109,7 +109,7 @@ def crossCheck(SLr,SLc,side):
                 if i == 1: #down left
                     temp[1] -= 1
                     temp[0] += 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -120,7 +120,7 @@ def crossCheck(SLr,SLc,side):
                 if i == 2: #up left
                     temp[1] -= 1
                     temp[0] -= 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -131,7 +131,7 @@ def crossCheck(SLr,SLc,side):
                 if i == 3: #up right
                     temp[1] += 1
                     temp[0] -= 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -150,7 +150,7 @@ def crossCheck(SLr,SLc,side):
                     else:
                         temp[1] += 1
 
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + temp
                         else: 
@@ -164,7 +164,7 @@ def crossCheck(SLr,SLc,side):
                     else:
                         temp[1] += 1
 
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -178,7 +178,7 @@ def crossCheck(SLr,SLc,side):
                     else:
                         temp[0] += 1
 
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -192,7 +192,7 @@ def crossCheck(SLr,SLc,side):
                     else:
                         temp[0] += 1
 
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -208,7 +208,7 @@ def crossCheck(SLr,SLc,side):
                     temp[0] += 1
                     temp[1] += 1
 
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -220,7 +220,7 @@ def crossCheck(SLr,SLc,side):
                     temp[0] -= 1
                     temp[1] += 1
 
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -231,7 +231,7 @@ def crossCheck(SLr,SLc,side):
                 if i == 2: #up left
                     temp[0] -= 1
                     temp[1] -= 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -242,7 +242,7 @@ def crossCheck(SLr,SLc,side):
                 if i == 3: #up right
                     temp[0] += 1
                     temp[1] -= 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -252,7 +252,7 @@ def crossCheck(SLr,SLc,side):
                         done = 1
                 if i == 4: #down
                     temp[1] += 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: #something is in the way
@@ -262,7 +262,7 @@ def crossCheck(SLr,SLc,side):
                         done = 1
                 elif i == 5: #up
                     temp[1] -= 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -272,7 +272,7 @@ def crossCheck(SLr,SLc,side):
                         done = 1
                 elif i == 6: #right
                     temp[0] += 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -282,7 +282,7 @@ def crossCheck(SLr,SLc,side):
                         done = 1
                 elif i == 7: #left
                     temp[0] -= 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if (board[temp[0]][temp[1]] == '0 '):
                             pos = pos + [temp]
                         else: 
@@ -297,7 +297,7 @@ def crossCheck(SLr,SLc,side):
                 if i == 0: #non moving
                     if a == 1: #up
                         temp[0] -= 1
-                        if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                        if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                             if (board[temp[0]][temp[1]] == '0 '):
                                 pos = pos + [temp]
                             else: 
@@ -306,7 +306,7 @@ def crossCheck(SLr,SLc,side):
                             done = 1
                     elif a == 2: #down
                         temp[0] += 1
-                        if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                        if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                             if (board[temp[0]][temp[1]] == '0 '):
                                 pos = pos + [temp]
                             else: 
@@ -315,7 +315,7 @@ def crossCheck(SLr,SLc,side):
                             done = 1
                 if i == 1: #left
                     temp[1] -= 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if a == 9: #nonmoving
                             if (board[temp[0]][temp[1]] == '0 '):
                                 pos = pos + [temp]
@@ -325,7 +325,7 @@ def crossCheck(SLr,SLc,side):
                             done = 1
                     elif a == 1: #up
                         temp[0] -= 1
-                        if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                        if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                             if (board[temp[0]][temp[1]] == '0 '):
                                 pos = pos + [temp]
                             else: 
@@ -334,7 +334,7 @@ def crossCheck(SLr,SLc,side):
                             done = 1
                     elif a == 2: #down
                         temp[0] += 1
-                        if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                        if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                             if (board[temp[0]][temp[1]] == '0 '):
                                 pos = pos + [temp]
                             else: 
@@ -343,7 +343,7 @@ def crossCheck(SLr,SLc,side):
                             done = 1
                 if i == 2: #right
                     temp[1] += 1
-                    if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                    if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                         if a == 9: #nonmoving
                             if (board[temp[0]][temp[1]] == '0 '):
                                 pos = pos + [temp]
@@ -353,7 +353,7 @@ def crossCheck(SLr,SLc,side):
                             done = 1
                     elif a == 1: #up
                         temp[0] -= 1
-                        if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                        if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                             if (board[temp[0]][temp[1]] == '0 '):
                                 pos = pos + [temp]
                             else: 
@@ -362,7 +362,7 @@ def crossCheck(SLr,SLc,side):
                             done = 1
                     elif a == 2: #down
                         temp[0] += 1
-                        if (temp[0] >= 0 and temp[0] < 8) and (temp[1] >= 0 and temp[1] < 8):
+                        if (temp[0] > 0 and temp[0] < 8) and (temp[1] > 0 and temp[1] < 8):
                             if (board[temp[0]][temp[1]] == '0 '):
                                 pos = pos + [temp]
                             else: 
@@ -392,12 +392,12 @@ def crossCheck(SLr,SLc,side):
     
         #up left/right
         if side == 0:
-            if SLc != 7 and SLr != 0 and SLc != 0:
+            if SLc != 7 and SLr != 0 :
                 if board[SLr-1][SLc+1] != '0 ':
                     T = board[SLr-1][SLc+1]
                     if (T == 'bP' or T == 'bR' or T == 'bH' or T == 'bK' or T == 'bQ' or T == 'bB'):
                         pos = pos + [SLr-1,SLc+1]
-            if SLc != 7 and SLr != 0 and SLc != 0:
+            if SLr != 0 and SLc != 0:
                 if board[SLr-1][SLc-1] != '0 ':
                     T = board[SLr-1][SLc-1]
                     if (T == 'bP' or T == 'bR' or T == 'bH' or T == 'bK' or T == 'bQ' or T == 'bB'):
@@ -462,82 +462,71 @@ def ai(side):
 
     if side == 0:
         units = boardtmp.count('wK') + boardtmp.count('wP') + boardtmp.count('wB') + boardtmp.count('wR') + boardtmp.count('wQ') + + boardtmp.count('wH') 
-        uids = []
-        for i in range(units):
-            found = 0
-            num = 0
-            while found == 0:
-                if boardtmp[num] == 'wK' or boardtmp[num] == 'wP' or boardtmp[num] == 'wB' or boardtmp[num] == 'wQ' or boardtmp[num] == 'wR' or boardtmp[num] == 'wH':
-                    uids += [num]
-                    found = 1
-                    boardtmp[num] = '0'
-                else:
-                    num += 1 
-                if num > 63:
-                    found = 1
-        #take the list of 0 - 63 and make it 8 by 8
-        ucords = []
-        for i in uids:
-            ucords = ucords + [[int(i/8),int(i%8)]]
-        allpos = []
-        for i in ucords:
-            allpos = allpos + [[i] + crossCheck(int(i[0]),int(i[1]),0)]
-        #check for attacking moves
-        attackmoves = []
-        nonattackmoves = []
-        for i in range(len(allpos)):
-            #starting pos then all other pos
-            for a in allpos[i]:
-                if len(allpos[i]) > 1:
-                    if board[a[0]][a[1]] == '0':
-                        nonattackmoves = nonattackmoves + [[allpos[0]]+a]
-                    else:
-                        attackmoves = attackmoves + [[allpos[0]]+a]
+        uLoc = [] #find all the pieces
+        for y in range(8):
+            for x in range(8):
+                T = board[y][x]
+                if T == 'wK' or T == 'wQ' or T == 'wB' or T == 'wP' or T == 'wR' or T == 'wH':
+                    uLoc = uLoc + [[y,x]]
 
-        if len(attackmoves) != 0:
-            return attackmoves[randint(0,len(attackmoves)-1)]
+        pos = []
+        for i in uLoc: #geting all the movements
+            pos += [[[i]+crossCheck(i[0],i[1],0)]]
+
+        attackM = [] #format [[sy,sx],[fy,fx]]
+        nonattackM = []
+
+        for i in pos: #compliling all moves
+            if len(i[0]) > 1:
+                b = i[0]
+                temp = b.pop(0)
+                for a in range(len(b)):
+                    T = board[b[a][0]][b[a][1]]
+                    if T  == '0 ':
+                        nonattackM += [[temp +b[a]]]
+                    else:
+                        attackM += [[temp +b[a]]]
+        
+        if len(attackM) > 0:
+            return attackM[randint(0,len(attackM)-1)]
         else:
-            return nonattackmoves[randint(0,len(nonattackmoves)-1)]
+            return nonattackM[randint(0,len(nonattackM)-1)]
+
+
+
 
 
     if side == 1:
         units = boardtmp.count('bK') + boardtmp.count('bP') + boardtmp.count('bB') + boardtmp.count('bR') + boardtmp.count('bQ') + + boardtmp.count('bH') 
-        uids = []
-        for i in range(units):
-            found = 0
-            num = 0
-            while found == 0:
-                if boardtmp[num] == 'bK' or boardtmp[num] == 'bP' or boardtmp[num] == 'bB' or boardtmp[num] == 'bQ' or boardtmp[num] == 'bR' or boardtmp[num] == 'bH':
-                    uids += [num]
-                    found = 1
-                    boardtmp[num] = '0'
-                else:
-                    num += 1 
-                if num > 63:
-                    found = 1
-        #take the list of 0 - 63 and make it 8 by 8
-        ucords = []
-        for i in uids:
-            ucords = ucords + [[int(i/8),int(i%8)]]
-        allpos = []
-        for i in ucords:
-            allpos = allpos + [[i] + crossCheck(int(i[0]),int(i[1]),1)]
-        #check for attacking moves
-        attackmoves = []
-        nonattackmoves = []
-        for i in range(len(allpos)):
-            #starting pos then all other pos
-            for a in allpos[i]:
-                if len(allpos[i]) > 1:
-                    if board[a[0]][a[1]] == '0':
-                        nonattackmoves = nonattackmoves + [[allpos[0]]+a]
-                    else:
-                        attackmoves = attackmoves + [[allpos[0]]+a]
+        uLoc = [] #find all the pieces
+        for y in range(8):
+            for x in range(8):
+                T = board[y][x]
+                if T == 'bK' or T == 'bQ' or T == 'bB' or T == 'bP' or T == 'bR' or T == 'bH':
+                    uLoc = uLoc + [[y,x]]
 
-        if len(attackmoves) != 0:
-            return attackmoves[randint(0,len(attackmoves)-1)]
+        pos = []
+        for i in uLoc: #geting all the movements
+            pos += [[[i]+crossCheck(i[0],i[1],1)]]
+
+        attackM = [] #format [[sy,sx],[fy,fx]]
+        nonattackM = []
+
+        for i in pos: #compliling all moves
+            if len(i[0]) > 1:
+                b = i[0]
+                temp = b.pop(0)
+                for a in range(len(b)):
+                    T = board[b[a][0]][b[a][1]]
+                    if T  == '0 ':
+                        nonattackM += [[temp +b[a]]]
+                    else:
+                        attackM += [[temp +b[a]]]
+        
+        if len(attackM) > 0:
+            return attackM[randint(0,len(attackM)-1)]
         else:
-            return nonattackmoves[randint(0,len(nonattackmoves)-1)]
+            return nonattackM[randint(0,len(nonattackM)-1)]
         
 
 
@@ -551,7 +540,7 @@ print('have fun')
 print('as most of my games choices between two words are answered with numbers so let us continue')
 run = 0
 while run == 0:
-    numb = input('will this be a 1 or 2 player game: "WARNING THE AI DOSE NOT WORK RN. ITS BEING FIXED CHOOSE 2 PLAYER')
+    numb = input('will this be a 1 or 2 player game: "WARNING THE AI DOSE NOT WORK RN. ITS BEING FIXED CHOOSE 2 PLAYER \n')
     numb = int(numb)
     if numb == 1:
         #needs an ai
@@ -578,14 +567,16 @@ while run == 0:
                 else:
                     print('white turn')
                     move = ai(0)
-                    move2 = moveChecker(move[0][0],move[0][1],move[1][0],move[1][1],0)
+                    move2 = moveChecker(move[0][0],move[0][1],move[0][2],move[0][3],0)
                     if move2:
-                        temp = board[SLr][SLc]
-                        board[SLr][SLc] = '0 '
-                        board[FLr][FLc] = temp
-                        turn = 1
+                        temp = board[move[0][0]][move[0][1]]
+                        board[move[0][0]][move[0][1]] = '0 '
+                        board[move[0][2]][move[0][3]] = temp
+                        turn = 0
                     else:
                         temp ='0 '
+            printb()
+            checkmateFind() 
             while (turn == 1):
                 if side == 1:
                     print('black turn')
@@ -604,14 +595,16 @@ while run == 0:
                 else:
                     print('black turn')
                     move = ai(1)
-                    move2 = moveChecker(move[0][0],move[0][1],move[1][0],move[1][1],1)
+                    move2 = moveChecker(move[0][0],move[0][1],move[0][2],move[0][3],1)
                     if move2:
-                        temp = board[SLr][SLc]
-                        board[SLr][SLc] = '0 '
-                        board[FLr][FLc] = temp
+                        temp = board[move[0][0]][move[0][1]]
+                        board[move[0][0]][move[0][1]] = '0 '
+                        board[move[0][2]][move[0][3]] = temp
                         turn = 1
                     else:
                         temp ='0 '
+                checkmateFind() 
+                printb()
 
     if numb == 2:
         print('chose who goes first on your end and we can get started')
