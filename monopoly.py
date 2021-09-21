@@ -10,10 +10,14 @@ truerun = 1
 def printb(player,deck,effect):
     print('-----------------------------------')
     print('                                   ')
-    print('            ' + player[1] + '         ')#name
+    print('            ' + player[1] + '      ')#name
+    print('                 '+ player[2]+'   ')
+    print('                                   ')
     print('                                   ')
     print('           ' + deck[0] + '         ')#location
-    print('           ' + str(deck[1]) + '         ')#cost
+    print('                                   ')
+    print('           ' + str(deck[1]) + '    ')#cost
+    print('                                   ')
     print('  ' + effect + '   ')#effect
     print('-----------------------------------')
     
@@ -46,9 +50,6 @@ publicTable = [ #format: name,buy cost, rents, house cost, number of houses, who
     ['St. James Place',180,[14,70,200,550,750.950],100,0,-1],
     ['Tennessee Avenue',180,[14,70,200,550,750.950],100,0,-1],
     ['St. James Place',200,[16,80,220,600,800.1000],100,0,-1],
-
-
-
 
     ['Reading railroad',200,[25,50,100,200],-1,0,-1],
     ['Pennsylvania Railroad',200,[25,50,100,200],-1,0,-1],
