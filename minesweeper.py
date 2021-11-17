@@ -1,9 +1,9 @@
 #minesweeper
 #automaticaly solve minesweeper always
 import random
-hight = 10
+hight = 15
 length = 20 #size of the to be minesweeper field
-amountOfMines = 50 #ammount of mines
+amountOfMines = 35 #ammount of mines
 going = True
 
 Trueboard = []
@@ -61,7 +61,7 @@ def incrementor(space): #increments numbers from 1 to 8
 
 def searchY(tobesearched,y):
     marked = []
-    for i in range(len(tobesearched)-1):
+    for i in range(len(tobesearched)):
         if tobesearched[i][1] == y: #look through all of tobesearched and mark every thing that could crash
             marked += [tobesearched[i]]
     for a in marked:
@@ -70,7 +70,7 @@ def searchY(tobesearched,y):
 
 def searchX(tobesearched,x):
     marked = []
-    for i in range(len(tobesearched)-1):
+    for i in range(len(tobesearched)):
         if tobesearched[i][0] == x: #look through all of tobesearched and mark every thing that could crash
             marked += [tobesearched[i]]
     for a in marked:
@@ -89,7 +89,6 @@ def clearAround(x,y): # clear every space around the designated space reusing so
     if y == hight-1: #bottom row
         #remove all 1 to y's
         tobesearched = searchY(tobesearched,1)
-        tobesearched.remove([-1,1])#was forced to do this here because the FUCKING FUNCTION DID NOT WANT TO
     if x == 0:#left edge
         tobesearched = searchX(tobesearched, -1)
     if x == length-1:#right edge
@@ -111,6 +110,12 @@ def makeBoard():
                     Trueboard[Cy+i[1]][Cx+i[0]] = incrementor(Trueboard[Cy+i[1]][Cx+i[0]])
 
 
+gtype = input('human or ai:  ')
+for i in gtype:
+    if i == 'i':
+        gtype = 'a'
+if gtype != 'a':
+    gtype = 'm'
 
 
 
@@ -125,6 +130,8 @@ while(running):
     for _ in range(amountOfMines): #place an amount of mines randomly into the board
         randomMinePlacer()
 
+    
+
     for Cy in range(hight): #Cy is for current y position
         for Cx in range(length): #Cx is for current x position
             if Trueboard[Cy][Cx] == '|X|': #mine spotted
@@ -136,7 +143,7 @@ while(running):
                 if Cy == hight-1: #bottom row
                     #remove all 1 to y's
                     tobesearched = searchY(tobesearched,1)
-                    tobesearched.remove([-1,1])#was forced to do this here because the FUCKING FUNCTION DID NOT WANT TO
+                    
                 if Cx == 0:#left edge
                     tobesearched = searchX(tobesearched, -1)
                 if Cx == length-1:#right edge
@@ -145,31 +152,105 @@ while(running):
                 for i in tobesearched: #search everything thats left and increment all of them
                     Trueboard[Cy+i[1]][Cx+i[0]] = incrementor(Trueboard[Cy+i[1]][Cx+i[0]])
 
-    
-    finalBoard = Trueboard
-    for Cy in range(hight): #Cy is for current y position
-        for Cx in range(length):
-           if finalBoard[Cy][Cx] == '|X|':
-               finalBoard[Cy][Cx] = '|_|'
-            
+    finalBoard = []
+    for i in Trueboard:
+        tmp = []
+        for a in i:
+            if a == '|X|':
+                tmp += ['|_|']
+            else:
+                tmp += [a]
+        finalBoard += [tmp]
+
 
     ingame = True
+    turnCount = 0
+    xCord = '' #strings for now but will be changed to int
+    yCord = ''
     while(ingame):
-        cords = input('cord format #,#; top left is 0,0 have fun: ')
-        xCord = '' #strings for now but will be changed to int
-        yCord = ''
-        t = 0#temperary var there just to switch between x and y
-        for i in cords: #seperate a string into single letters and numbers in string format
-            if t == 3:
-                t=1
-            if i == ',':
-                t=3
-            if t == 0:
-                xCord += i
-            if t == 1:
-                yCord += i
-        xCord = int(xCord)
-        yCord = int(yCord)
+        turnCount +=1
+        if gtype == 'm': #if the game is in manual mode
+            xCord = '' #strings for now but will be changed to int
+            yCord = ''      
+            cords = input('cord format #,#; top left is 0,0 have fun: ')
+            t = 0#temperary var there just to switch between x and y
+            for i in cords: #seperate a string into single letters and numbers in string format
+                if t == 3:
+                    t=1
+                if i == ',':
+                    t=3
+                if t == 0:
+                    xCord += i
+                if t == 1:
+                    yCord += i
+            xCord = int(xCord)
+            yCord = int(yCord)
+        else: #ai game
+            print()
+            if turnCount == 1: #turn one
+                xCord = random.randint(0,length-1)
+                yCord =random.randint(0,hight-1)
+            else:
+                #generate new board baised on shown board
+                #scan from top left to bottom right for an number
+                #in a list  record every uncovered block and give it a chance to be a min
+                #the chance value is number of mines around / number of uncovered spots
+                
+                #format:  [[position],chance]
+                blockOdds = []
+
+                for x in range(length):
+                    for y in range(hight):
+                        if showBoard[y][x] != '|_|' and showBoard[y][x] != '|0|':
+                            #number detected
+                            #is it in the block already
+                            check = clearAround(x,y)
+                            checkP = []
+                            for i in check:
+                                checkP += [[y+i[1],x+i[0]]] #get real position of everything we are checking
+                            
+                            
+                            # calculate score / count the number of '|_|' "s
+                            c = 0
+                            for i in checkP:
+                                if showBoard[i[0]][i[1]] == '|_|':
+                                    c += 1
+                            score = float(int(showBoard[y][x][1])/c)
+
+
+                            if len(blockOdds) > 0: #adding stuff to block odds
+                                for i in blockOdds: 
+                                        tmp = -1
+                                        for a in checkP:
+                                            if showBoard[a[0]][a[1]] == '|_|': #only checking blocks that are uncovered
+                                                if i[0] == a: #if match found in database
+                                                    tmp = blockOdds.index(i) #location of data in bOdds
+                                                    checkP.remove(a)
+                                        if tmp != -1: #look at data
+                                            if blockOdds[tmp][1] < score:
+                                                blockOdds[tmp][1] = score #change it to the higer value
+                            for a in checkP:
+                                if showBoard[a[0]][a[1]] == '|_|': 
+                                    blockOdds += [[[a[0],a[1]],score]]
+
+
+                #done making block odds
+                #now  play the lowest one
+                lowest = 1.1
+                lowestP = 0
+                for i in range(len(blockOdds)):
+                    if  blockOdds[i][1] < lowest:
+                        lowest = blockOdds[i][1]
+                        lowestP = i
+                
+                xCord = blockOdds[lowestP][0][1]
+                yCord = blockOdds[lowestP][0][0]
+                print(xCord,yCord,'score',blockOdds[lowestP][1])
+
+                                        
+                            
+
+                                    
 
         #pierce showboard into true board
         showBoard[yCord][xCord] = Trueboard[yCord][xCord]
@@ -202,7 +283,3 @@ while(running):
     for i in input('New Game?  '):
         if i == 'n': #check for a no responce of any kind
             running = False
-
-
-print('\n \n \n')
-printTrueb()
