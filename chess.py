@@ -1,306 +1,208 @@
-#the goal is to create chess or something like chess.
-#to  do list
-#make a board done
-#put pieces on board done
-#make pieces move the way the have to done
-#have the player control one side.(white or black)
-#something in the way checker done
-#how the ai works
-    #check the current board 
-    #make a move
-#add check
-
-from random import seed
-from random import randint
-
-board = [['wR','wN','wB','wQ','wK','wB','wN','wR'],
-        ['wP','wP','wP','wP','wP','wP','wP','wP'],
-        ['0 ','0 ','0 ','0 ','0 ','0 ','0 ','0 '],
-        ['0 ','0 ','0 ','0 ','0 ','0 ','0 ','0 '],
-        ['0 ','0 ','0 ','0 ','0 ','0 ','0 ','0 '],
-        ['0 ','0 ','0 ','0 ','0 ','0 ','0 ','0 '],
-        ['bP','bP','bP','bP','bP','bP','wP','wP'],
-        ['bR','bH','bB','bQ','bK','bB','wH','wR']]
-
-def printb():
-    print("------------------------------------------------")
-    print(board[0])
-    print(board[1])
-    print(board[2])
-    print(board[3])
-    print(board[4])
-    print(board[5])
-    print(board[6])
-    print(board[7])
-    print("------------------------------------------------")
-
-def sideCheck(unit,side):
-    T = unit
-    if side == 0: #white 
-        if (T == 'bP' or T == 'bR' or T == 'bH' or T == 'bK' or T == 'bQ' or T == 'bB'):
-            return True
-    elif  side == 1: #black
-        if (T == 'wP' or T == 'wR' or T == 'wH' or T == 'wK' or T == 'wQ' or T == 'wB'):
-            return True
-    if T == '0 ':
-        return True
-    else:
-        return False
-    
-    
-
-def knightCheck(loc,side):
-    tpos = [] #total positions
-    #up
-    if sideCheck(board[loc[0]-1][loc[1]+2]): 
-        tpos += [[loc[0]-1,loc[1]+2]]
-
-    if sideCheck(board[loc[0]-1][loc[1]+2]):
-        tpos += [[loc[0]-1,loc[1]-2]]
-
-    if sideCheck(board[loc[0]-1][loc[1]+2]):
-        tpos += [[loc[0]+1,loc[1]+2]]
-    
-    if sideCheck(board[loc[0]-1][loc[1]+2]):
-        tpos += [[loc[0]+1,loc[1]-2]]
-
-    #down
-
-    if sideCheck(board[loc[0]-1][loc[1]+2]):
-        tpos += [[loc[0]-2,loc[1]+1]]
-    
-    if sideCheck(board[loc[0]-1][loc[1]+2]):
-        tpos += [[loc[0]-2,loc[1]-1]]
-    
-    if sideCheck(board[loc[0]-1][loc[1]+2]):
-        tpos += [[loc[0]+2,loc[1]+1]]
-    
-    if sideCheck(board[loc[0]-1][loc[1]+2]):
-        tpos += [[loc[0]+2,loc[1]-1]]
-
-    return tpos
+#chess attempt #3
+#build a system where i can test each piece individualy
+#incorperate algebraic notation
+#pieces
 
 
-def rookCheck(loc,side):
-    #up
-    done = 0
-    temp = [loc[0],loc[1]]
-    tpos = []
-    if loc[0] - 1 != -1:
-        temp[0] -= 1
-        done = 0
-        while done == 0:
-            if temp[0] != -1:
-                if board[temp[0]][temp[1]] == '0 ':
-                    tpos += [temp]
-                else:
-                    done = 1
-                if sideCheck(board[temp[0]][temp[1]],side):
-                    tpos += [temp]
-                    done = 1
-            else:
-                done = 1
-            temp[0] -= 1
-    #down
-    temp = [loc[0],loc[1]]
-    if loc[0] + 1 != 8:
-        temp[0] += 1
-        done = 0
-        while done == 0:
-            if temp[0] != 8:
-                if board[temp[0]][temp[1]] == '0 ':
-                    tpos += [temp]
-                else:
-                    done = 1
-                if sideCheck(board[temp[0]][temp[1]],side):
-                    tpos += [temp]
-                    done = 1
-            else:
-                done = 1
-            temp[0] += 1
-    #left
-    temp = [loc[0],loc[1]]
-    if loc[1] - 1 != -1:
-        temp[1] -= 1
-        done = 0
-        while done == 0:
-            if temp[1] != -1:
-                if board[temp[0]][temp[1]] == '0 ':
-                    tpos += [temp]
-                else:
-                    done = 1
-                if sideCheck(board[temp[0]][temp[1]],side):
-                    tpos += [temp]
-                    done = 1
-                    
-            else:
-                done = 1
-            temp[1] -= 1
-    #right
-    temp = [loc[0],loc[1]]
-    if loc[1] + 1 != 8:
-        temp[1] += 1
-        done = 0
-        while done == 0:
-            if temp[1] != 8:
-                if board[temp[0]][temp[1]] == '0 ':
-                    tpos += [temp]
-                else:
-                    done = 1
-                if sideCheck(board[temp[0]][temp[1]],side):
-                    tpos += [temp]
-                    done = 1
-            else:
-                done = 1
-            temp[1] += 1
-    return tpos
+board = []
 
-def  bishopCheck(loc,side):
-    done = 0
-    temp = [loc[0],loc[1]]
-    tpos = []
-    #up right
-    if loc[0] - 1 != -1 and loc[1] + 1 != 8:
-        temp[0] -= 1
-        temp[1] += 1
-        done = 0
-        while done == 0:
-            if loc[0] - 1 != -1 and loc[1] + 1 != 8:
-                if board[temp[0]][temp[1]] == '0 ':
-                    tpos += [temp]
-                else:
-                    done = 1
-                if sideCheck(board[temp[0]][temp[1]],side):
-                    tpos += [temp]
-                    done = 1
-            else:
-                done = 1
-            temp[0] -= 1
-            temp[1] += 1
-    temp = [loc[0],loc[1]]
+def printB(B):
+    print()
+    for i in B: #print the board
+        print(i)
+    print()
 
-    if loc[0] - 1 != -1 and loc[1] - 1 != -1:
-        temp[0] -= 1
-        temp[1] -= 1
-        done = 0
-        while done == 0:
-            if loc[0] - 1 != -1 and loc[1] - 1 != -1:
-                if board[temp[0]][temp[1]] == '0 ':
-                    tpos += [temp]
-                else:
-                    done = 1
-                if sideCheck(board[temp[0]][temp[1]],side):
-                    tpos += [temp]
-                    done = 1
-            else:
-                done = 1
-            temp[0] -= 1
-            temp[1] -= 1
-    temp = [loc[0],loc[1]]
+def makeNewB():
+    #row by row
+    board = [
+        ['|_|','|A| ','|B| ','|C| ','|D| ','|E| ','|F| ','|G| ','|H| '],
+        ['|8|','|bR|','|bN|','|bB|','|bQ|','|bK|','|bB|','|bN|','|bR|'],
+        ['|7|','|bP|','|bP|','|bP|','|bP|','|bP|','|bP|','|bP|','|bP|'],
+        ['|6|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
+        ['|5|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
+        ['|4|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
+        ['|3|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
+        ['|2|','|wP|','|wP|','|wP|','|wP|','|wP|','|wP|','|wP|','|wP|'],
+        ['|1|','|wR|','|wN|','|wB|','|wQ|','|wK|','|wB|','|wN|','|wR|']]
+    return board
 
-    if loc[0] + 1 != 8 and loc[1] + 1 != 8:
-        temp[0] += 1
-        temp[1] += 1
-        done = 0
-        while done == 0:
-            if loc[0] + 1 != 8 and loc[1] + 1 != 8:
-                if board[temp[0]][temp[1]] == '0 ':
-                    tpos += [temp]
-                else:
-                    done = 1
-                if sideCheck(board[temp[0]][temp[1]],side):
-                    tpos += [temp]
-                    done = 1
-            else:
-                done = 1
-            temp[0] += 1
-            temp[1] += 1
-    temp = [loc[0],loc[1]]
+def makeTestB():
+    board = [
+        ['|_|','|A| ','|B| ','|C| ','|D| ','|E| ','|F| ','|G| ','|H| '],
+        ['|8|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
+        ['|7|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
+        ['|6|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
+        ['|5|','|__|','|__|','|__|','|wR|','|__|','|__|','|wB|','|__|'],
+        ['|4|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
+        ['|3|','|__|','|wQ|','|__|','|__|','|__|','|__|','|__|','|__|'],
+        ['|2|','|__|','|__|','|__|','|__|','|bP|','|bP|','|__|','|__|'],
+        ['|1|','|__|','|__|','|__|','|__|','|bP|','|bP|','|__|','|__|']]
+    return board
 
-    if loc[0] + 1 != 8 and loc[1] - 1 != -1:
-        temp[0] += 1
-        temp[1] -= 1
-        done = 0
-        while done == 0:
-            if loc[0] + 1 != 8 and loc[1] - 1 != -1:
-                if board[temp[0]][temp[1]] == '0 ':
-                    tpos += [temp]
-                else:
-                    done = 1
-                if sideCheck(board[temp[0]][temp[1]],side):
-                    tpos += [temp]
-                    done = 1
-            else:
-                done = 1
-            temp[0] += 1
-            temp[1] -= 1
-    temp = [loc[0],loc[1]]
-    return tpos
-
-def queenCheck(loc):
-    tpos = rookCheck(loc)
-    tpos += [bishopCheck(loc)]
-    return tpos
-    
-def pawnCheck(loc,side):
-    tpos = []
-    if side == 0: #white
-        if loc[0] == 1:
-            if board[3][loc[1]] == '0 ': #if pawn first row allow it to go 2 down
-                tpos += [[3,loc[1]]]
-        if loc[0] + 1 != -1:
-            if board[loc[0]+1][loc[1]] == '0 ': # can pawn go 1 down
-                tpos += [[loc[0]+1,loc[1]]]
-        if loc[0] + 1 != -1 and loc[1] - 1 != -1:
-            if sideCheck(board[loc[0]+1][loc[1]-1],side):
-                tpos += [[loc[0]+1,loc[1]-1]]
-        if loc[0] + 1 != -1 and loc[1] + 1 != 8:
-            if sideCheck(board[loc[0]-1][loc[1]+1],side):
-                tpos += [[loc[0]+1,loc[1]+1]]
+def sideCheck(side,L,mark,piece):
     if side == 1:
-        if loc[0] == 6: 
-            if board[4][loc[1]] == '0 ': #if pawn first row allow it to go 2 up
-                tpos += [[3,loc[1]]]
-        if loc[0] + 1 != -1:
-            if board[loc[0]+1][loc[1]] == '0 ': # can pawn go 1 up
-                tpos += [[loc[0]+1,loc[1]]]
-        if loc[0] + 1 != -1 and loc[1] - 1 != -1:
-            if sideCheck(board[loc[0]+1][loc[1]-1],side):
-                tpos += [[loc[0]+1,loc[1]-1]]
-        if loc[0] + 1 != -1 and loc[1] + 1 != 8:
-            if sideCheck(board[loc[0]-1][loc[1]+1],side):
-                tpos += [[loc[0]+1,loc[1]+1]]
-    return tpos
+        if piece == '|bP|' or piece == '|bR|' or piece == '|bN|' or piece == '|bB|' or piece == '|bQ|' or piece == '|bk|':
+            mark += [L]
+    if side == 2:
+        if piece == '|wP|' or piece == '|wR|' or piece == '|wN|' or piece == '|wB|' or piece == '|wQ|' or piece == '|wk|':
+            mark += [L]
+    return mark
+def directionalCheck(L,Xmod,Ymod,mark,side): #beams in one direction for moves
+    if L[0]+Xmod < 9 and L[1]+Ymod < 9 and  L[0]+Xmod > 0 and L[1]+Ymod > 0: #check for bounds
+        if board[L[1]+Ymod][L[0]+Xmod] == '|__|': #check if blank
+            mark += [[L[0]+Xmod,L[1]+Ymod]]
+            directionalCheck([L[0]+Xmod,L[1]+Ymod],Xmod,Ymod,mark,side) #mark and repeat
+        else: mark = sideCheck(side,[L[0]+Xmod,L[1]+Ymod],mark,board[L[1]+Ymod][L[0]+Xmod]) #check if on the same side
+    return mark
+def bishopCheck(L,side):
+    mark = directionalCheck(L,1,1,[],side)
+    mark += directionalCheck(L,-1,1,mark,side)
+    mark += directionalCheck(L,-1,-1,mark,side)
+    mark += directionalCheck(L,1,-1,mark,side)
+    return mark
+def rookCheck(L,side):
+    mark = directionalCheck(L,0,1,[],side)
+    mark += directionalCheck(L,0,-1,mark,side)
+    mark += directionalCheck(L,1,0,mark,side)
+    mark += directionalCheck(L,-1,0,mark,side)
+    return mark
+def queenCheck(L,side):
+    mark = bishopCheck(L,side)
+    mark += rookCheck(L,side)
+    return mark
+def knightCheck(L,side):
+    mark = [] #total positions
+    return mark
+
+def moveCheck(piece,L,side): #location is [x,y]
+    legalmoves = []
+    if piece == '|wB|' or piece == '|bB|':
+        legalmoves = bishopCheck(L,side)
+    if piece == '|wR|' or piece == '|bR|':
+        legalmoves = rookCheck(L,side)
+    if piece == '|wQ|' or piece == '|bQ|':
+        legalmoves = queenCheck(L,side)
+    #print('legal moves',legalmoves) #debug stuff
+    return legalmoves
 
 
-def fullcheck(side):
-    #look at all pieces form 1 side
-    Flatboard = []
-    for i in board:
-        for a in i:
-            Flatboard += a
-    Allpos = []
-    a = -1
-    for i in Flatboard: #geting cords of any piece using 1 number
-        a += 1
-        b = [int(a/8),a%8]
+def letertoNum(l):
+    if l == 'A' or l == 'a':
+        return 1
+    if l == 'B' or l == 'b':
+        return 2
+    if l == 'C' or l == 'c':
+        return 3
+    if l == 'D' or l == 'd':
+        return 4
+    if l == 'E' or l == 'e':
+        return 5
+    if l == 'F' or l == 'f':
+        return 6
+    if l == 'G' or l == 'g':
+        return 7
+    if l == 'H' or l == 'h':
+        return 8
+    #now tranlating the numbers. just trust me here we have to do this
+    if l == '1':
+        return 8
+    if l == '2':
+        return 7
+    if l == '3':
+        return 6
+    if l == '4':
+        return 5
+    if l == '5':
+        return 4
+    if l == '6':
+        return 3
+    if l == '7':
+        return 2
+    if l == '8':
+        return 1
 
+
+def Translator(move:str):
+    #translates chess notation into piece movement
+    p1 = '' 
+    p2 = ''
+    part = 1
+    for i in move: #each letter
+        #location of piece to desired location
+        if part == 1:
+            p1 += i
+        else:
+            p2 += i
+
+        try:
+            int(i) #check if i is a number
+            part = 2 #if it is things change
+        except:
+            str(i) #filler. cant remove
+
+    startx = letertoNum(p1[0])
+    starty = letertoNum(p1[1])
+    endx = letertoNum(p2[0])
+    endy = letertoNum(p2[1])
+    return [[startx,starty],[endx,endy]]
+
+def moveMaker(move,side,board):
+    cords = Translator(move) #words to cords
+    start = cords[0]
+    end = cords[1]
+    Spiece = board[start[1]][start[0]]
+    legal = []
+    if side == 1: #white
+        if Spiece == '|wP|' or Spiece == '|wR|' or Spiece == '|wN|' or Spiece == '|wB|' or Spiece == '|wQ|' or Spiece == '|wK|': #confirm
+            legal = moveCheck(Spiece,start,side)
+    if side == 2: #black
+        if Spiece == '|bP|' or Spiece == '|bR|' or Spiece == '|bN|' or Spiece == '|bB|' or Spiece == '|bQ|' or Spiece == '|bk|': #confirm
+            legal = moveCheck(Spiece,start,side)
+        
+
+    try:
+        legal.index(end)
+        #valid move
+        board[start[1]][start[0]] = '|__|'
+        board[end[1]][end[0]] = Spiece
+    except:
+        print('illegal move')
     
+    return board
+        
+
+GameRun = True
+print('chess lol')
+p = input('white or black: ')
+mode = 0
+for i in p: #spliting up a string
+    if i == 't':
+        mode = 3
+    if i == 'w' or i == 'W':
+        mode = 1
+    if i == 'b' or i == 'B':
+        mode = 2
+
+if mode == 0:
+    print('idiot')
+    GameRun = False
+
+if mode == 3:
+    board = makeTestB()
+else: board = makeNewB()
+
+while GameRun:
+    if mode == 3:
+        printB(board)
+        move = input('whats your move: ')
+        print(Translator(move))
+        board = moveMaker(move,1, board)
+
+        
     
+
 
 
         
 
-
-
-#Game start
-print('Welcome to chess, this game will be a bit diffrent than most other games you have played')
-print('to make a move you must input you starting cords starting at 0,0 from the top left and down to 7,7 at the bottom left')
-print('to finish a move you have to also input the final cords for that piece, if it dosnt work you have to do it again')
-print('to end the game you have to capture the opposing king, so regular chess after the checkmate')
-print('have fun')
-print('as most of my games choices between two words are answered with numbers so let us continue')
-run = 0
-while run == 0: # start the game
-    numb = input('will this be a 1 or 2 player game: ')
-    numb = int(numb)
+        

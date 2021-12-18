@@ -1,6 +1,16 @@
 #minesweeper
 #automaticaly solve minesweeper always
 import random
+import tf as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+
+
+
+
+
+
+
 hight = 15
 length = 20 #size of the to be minesweeper field
 amountOfMines = 35 #ammount of mines
@@ -59,6 +69,27 @@ def incrementor(space): #increments numbers from 1 to 8
         space = '|8|'
     return space #mines are uneffected
 
+def decrementor(space):
+    if space == '|8|':
+        space = '|7|'
+    elif space == '|7|':
+        space = '|6|'
+    elif space == '|6|':
+        space = '|5|'
+    elif space == '|5|':
+        space = '|4|'
+    elif space == '|4|':
+        space = '|3|'
+    elif space == '|3|':
+        space = '|2|'
+    elif space == '|2|':
+        space = '|1|'
+    elif space == '|1|':
+        space = '|0|'
+    return space #mines are uneffected
+
+
+
 def searchY(tobesearched,y):
     marked = []
     for i in range(len(tobesearched)):
@@ -96,18 +127,30 @@ def clearAround(x,y): # clear every space around the designated space reusing so
     return tobesearched
 
 
-def makeBoard():
-    Trueboard = formatBoard()
-    for _ in range(amountOfMines): #place an amount of mines randomly into the board
-        randomMinePlacer()
 
-    for Cy in range(hight): #Cy is for current y position
-        for Cx in range(length): #Cx is for current x position
-            if Trueboard[Cy][Cx] == '|X|': #mine spotted
-                tobesearched = clearAround(Cx,Cy)
-                
-                for i in tobesearched: #search everything thats left and increment all of them
-                    Trueboard[Cy+i[1]][Cx+i[0]] = incrementor(Trueboard[Cy+i[1]][Cx+i[0]])
+def scan0(x,y):
+    check = clearAround(x,y)
+    checkP = []
+    for i in check:
+        checkP += [[y+i[1],x+i[0]]] #get real position of everything we are checking
+    for i in checkP:
+        if showBoard[i[0]][i[1]] == '|_|':
+            showBoard[i[0]][i[1]] = Trueboard[i[0]][i[1]] #geting the true value
+            if Trueboard[i[0]][i[1]] == '|0|':
+                scan0(i[1],i[0])
+
+def checkBlank(x,y,board):
+    p = clearAround(x,y)
+    c = 0
+    for i in p:
+        if board[i[1]][i[0]] == '|_|':
+            c += 1
+    return c
+
+
+    
+
+
 
 
 gtype = input('human or ai:  ')
@@ -191,61 +234,8 @@ while(running):
                 xCord = random.randint(0,length-1)
                 yCord =random.randint(0,hight-1)
             else:
-                #generate new board baised on shown board
-                #scan from top left to bottom right for an number
-                #in a list  record every uncovered block and give it a chance to be a min
-                #the chance value is number of mines around / number of uncovered spots
-                
-                #format:  [[position],chance]
-                blockOdds = []
-
-                for x in range(length):
-                    for y in range(hight):
-                        if showBoard[y][x] != '|_|' and showBoard[y][x] != '|0|':
-                            #number detected
-                            #is it in the block already
-                            check = clearAround(x,y)
-                            checkP = []
-                            for i in check:
-                                checkP += [[y+i[1],x+i[0]]] #get real position of everything we are checking
-                            
-                            
-                            # calculate score / count the number of '|_|' "s
-                            c = 0
-                            for i in checkP:
-                                if showBoard[i[0]][i[1]] == '|_|':
-                                    c += 1
-                            score = float(int(showBoard[y][x][1])/c)
-
-
-                            if len(blockOdds) > 0: #adding stuff to block odds
-                                for i in blockOdds: 
-                                        tmp = -1
-                                        for a in checkP:
-                                            if showBoard[a[0]][a[1]] == '|_|': #only checking blocks that are uncovered
-                                                if i[0] == a: #if match found in database
-                                                    tmp = blockOdds.index(i) #location of data in bOdds
-                                                    checkP.remove(a)
-                                        if tmp != -1: #look at data
-                                            if blockOdds[tmp][1] < score:
-                                                blockOdds[tmp][1] = score #change it to the higer value
-                            for a in checkP:
-                                if showBoard[a[0]][a[1]] == '|_|': 
-                                    blockOdds += [[[a[0],a[1]],score]]
-
-
-                #done making block odds
-                #now  play the lowest one
-                lowest = 1.1
-                lowestP = 0
-                for i in range(len(blockOdds)):
-                    if  blockOdds[i][1] < lowest:
-                        lowest = blockOdds[i][1]
-                        lowestP = i
-                
-                xCord = blockOdds[lowestP][0][1]
-                yCord = blockOdds[lowestP][0][0]
-                print(xCord,yCord,'score',blockOdds[lowestP][1])
+                #deep learning ai keros
+                print('not set up yet')
 
                                         
                             
@@ -254,18 +244,10 @@ while(running):
 
         #pierce showboard into true board
         showBoard[yCord][xCord] = Trueboard[yCord][xCord]
+        if Trueboard[yCord][xCord] == '|0|':
+            scan0(xCord,yCord)
 
-        if Trueboard[yCord][xCord] == '|0|': #when you hit a 0 reveal all around it
-            remove = clearAround(xCord,yCord)
-            while len(remove) != 0: #continue while there are still markes
-                i = remove[0]
-                showBoard[yCord+i[1]][xCord+i[0]] = Trueboard[yCord+i[1]][xCord+i[0]] #pull marked spot into show
-                remove.remove(i)
-                if showBoard[yCord+i[1]][xCord+i[0]] == '|0|': #if we run into another 0
-                    tmark = clearAround(xCord+i[0],yCord+i[1]) #collect new marks for that 0
-                    for t in tmark:
-                        if remove.count(t) == 0 and showBoard[yCord+t[1]+i[1]][xCord+t[0]+i[0]] == '|_|': #if a spot isnt already marked mark it
-                            remove += [[t[0]+i[0],t[1]+i[1]]] #account for location
+        
 
         #printTrueb()
         printShow()
