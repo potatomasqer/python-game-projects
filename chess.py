@@ -29,12 +29,12 @@ def makeNewB():
 def makeTestB():
     board = [
         ['|_|','|A| ','|B| ','|C| ','|D| ','|E| ','|F| ','|G| ','|H| '],
-        ['|8|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
-        ['|7|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
-        ['|6|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
-        ['|5|','|__|','|__|','|__|','|wR|','|__|','|__|','|wB|','|__|'],
-        ['|4|','|__|','|__|','|__|','|__|','|__|','|__|','|__|','|__|'],
-        ['|3|','|__|','|wQ|','|__|','|__|','|__|','|__|','|__|','|__|'],
+        ['|8|','|__|','|__|','|__|','|wK|','|bP|','|bP|','|__|','|__|'],
+        ['|7|','|wP|','|__|','|__|','|wP|','|bP|','|bP|','|wP|','|__|'],
+        ['|6|','|__|','|wP|','|__|','|__|','|bP|','|bP|','|__|','|__|'],
+        ['|5|','|__|','|wN|','|__|','|wR|','|bP|','|bP|','|wB|','|__|'],
+        ['|4|','|__|','|__|','|__|','|__|','|bP|','|bP|','|__|','|__|'],
+        ['|3|','|__|','|wQ|','|__|','|__|','|bP|','|bP|','|__|','|__|'],
         ['|2|','|__|','|__|','|__|','|__|','|bP|','|bP|','|__|','|__|'],
         ['|1|','|__|','|__|','|__|','|__|','|bP|','|bP|','|__|','|__|']]
     return board
@@ -71,8 +71,55 @@ def queenCheck(L,side):
     mark += rookCheck(L,side)
     return mark
 def knightCheck(L,side):
-    mark = [] #total positions
+    allPos = [[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[1,2],[1,-2]] # a list of all moves that a knight can do
+    mark = []
+    for i in allPos:
+        if (L[0]+i[0] > 0 and L[0]+i[0] < 9) and (L[1]+i[1] > 0 and L[1]+i[1] < 9):
+            if board[L[1]+i[1]][L[0]+i[0]] == '|__|':
+                mark += [[L[0]+i[0],L[1]+i[1]]]
+            else:
+                mark = sideCheck(side,[L[0]+i[0],L[1]+i[1]],mark,board[L[1]+i[1]][L[0]+i[0]])
     return mark
+def kingCheck(L,side):
+    allPos = [[1,1],[1,-1],[1,0],[0,1],[0,-1],[-1,1],[-1,-1],[-1,0]] # a list of all moves that the king can do
+    mark = []
+    for i in allPos:
+        if (L[0]+i[0] > 0 and L[0]+i[0] < 9) and (L[1]+i[1] > 0 and L[1]+i[1] < 9):
+            if board[L[1]+i[1]][L[0]+i[0]] == '|__|':
+                mark += [[L[0]+i[0],L[1]+i[1]]]
+            else:
+                mark = sideCheck(side,[L[0]+i[0],L[1]+i[1]],mark,board[L[1]+i[1]][L[0]+i[0]])
+    return mark
+def pawnCheck(L,side): #no ep. just no
+    mark = []
+    if side == 1: # sides are very importent for pawns
+        if L[1] == 2:
+            if board[4][L[0]] == '|__|':
+                mark += [[L[0],4]]
+        if L[1]+1 < 9: #not at edge and not blocked
+            t = board[L[1]+1][L[0]] 
+            if t == '|__|':
+                mark += [[L[0],L[1]+1]]
+        if L[0] > 1:
+            mark = sideCheck(side,[L[0]-1,L[1]+1],mark,board[L[1]+1][L[0]-1])
+        if L[0] < 8:
+            mark = sideCheck(side,[L[0]+1,L[1]+1],mark,board[L[1]+1][L[0]+1])
+    if side == 2: # sides are very importent for pawns
+        if L[1] == 7:
+            if board[5][L[0]] == '|__|':
+                mark += [[L[0],5]]
+        if L[1]-1 > 0: #not at edge and not blocked
+            t = board[L[1]-1][L[0]] 
+            if t == '|__|':
+                mark += [[L[0],L[1]-1]]
+        if L[0] > 1:
+            mark = sideCheck(side,[L[0]-1,L[1]-1],mark,board[L[1]-1][L[0]-1])
+        if L[0] < 8:
+            mark = sideCheck(side,[L[0]+1,L[1]-1],mark,board[L[1]-1][L[0]+1])
+    return mark
+
+
+
 
 def moveCheck(piece,L,side): #location is [x,y]
     legalmoves = []
@@ -82,6 +129,15 @@ def moveCheck(piece,L,side): #location is [x,y]
         legalmoves = rookCheck(L,side)
     if piece == '|wQ|' or piece == '|bQ|':
         legalmoves = queenCheck(L,side)
+    if piece == '|wN|' or piece == '|bN|':
+        legalmoves = knightCheck(L,side)
+    if piece == '|wK|' or piece == '|bK|':
+        legalmoves = kingCheck(L,side)
+    if piece == '|wP|' or piece == '|bP|':
+        legalmoves = pawnCheck(L,side)
+
+
+
     #print('legal moves',legalmoves) #debug stuff
     return legalmoves
 
