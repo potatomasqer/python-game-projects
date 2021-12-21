@@ -47,7 +47,7 @@ def sideCheck(side,L,mark,piece):
         if piece == '|wP|' or piece == '|wR|' or piece == '|wN|' or piece == '|wB|' or piece == '|wQ|' or piece == '|wk|':
             mark += [L]
     return mark
-def directionalCheck(L,Xmod,Ymod,mark,side): #beams in one direction for moves
+def directionalCheck(L,Xmod,Ymod,mark,side): #beams in one direction for moves can do lines and diagonals
     if L[0]+Xmod < 9 and L[1]+Ymod < 9 and  L[0]+Xmod > 0 and L[1]+Ymod > 0: #check for bounds
         if board[L[1]+Ymod][L[0]+Xmod] == '|__|': #check if blank
             mark += [[L[0]+Xmod,L[1]+Ymod]]
@@ -92,7 +92,7 @@ def kingCheck(L,side):
     return mark
 def pawnCheck(L,side): #no ep. just no
     mark = []
-    if side == 1: # sides are very importent for pawns
+    if side == 2: # sides are very importent for pawns
         if L[1] == 2:
             if board[4][L[0]] == '|__|':
                 mark += [[L[0],4]]
@@ -104,7 +104,7 @@ def pawnCheck(L,side): #no ep. just no
             mark = sideCheck(side,[L[0]-1,L[1]+1],mark,board[L[1]+1][L[0]-1])
         if L[0] < 8:
             mark = sideCheck(side,[L[0]+1,L[1]+1],mark,board[L[1]+1][L[0]+1])
-    if side == 2: # sides are very importent for pawns
+    if side == 1: # sides are very importent for pawns
         if L[1] == 7:
             if board[5][L[0]] == '|__|':
                 mark += [[L[0],5]]
@@ -223,36 +223,82 @@ def moveMaker(move,side,board):
         board[end[1]][end[0]] = Spiece
     except:
         print('illegal move')
+        if side == 1: move = input("White's move: ")
+        else: move = input("Backs's move: ")
+        board = moveMaker(move,side,board)
     
     return board
-        
+
+def checkmateCheck():
+    Wk = False
+    Bk = False
+    for a in board:
+        for i in a:
+            if i == '|wK|':
+                Wk = True
+            if i == '|bK|':
+                Bk = True
+    if Wk == False:
+        return 2
+    elif Bk == False:
+        return 1
+    else: return 0
 
 GameRun = True
 print('chess lol')
-p = input('white or black: ')
+print('every move uses the position of the piece and where its going. ex e4e5. no need to spesify what the piece is')
+p = input('type run to start: ')
 mode = 0
 for i in p: #spliting up a string
     if i == 't':
-        mode = 3
-    if i == 'w' or i == 'W':
-        mode = 1
-    if i == 'b' or i == 'B':
         mode = 2
+    if i == 'r' or i == 'R':
+        mode = 1
+    
 
 if mode == 0:
     print('idiot')
     GameRun = False
 
-if mode == 3:
+
+if mode == 2:
     board = makeTestB()
 else: board = makeNewB()
 
+side = 1
 while GameRun:
-    if mode == 3:
+    if mode == 2:
         printB(board)
         move = input('whats your move: ')
         print(Translator(move))
         board = moveMaker(move,1, board)
+    else: #starts the game
+        printB(board)
+        if side == 1: #white to move
+            move = input("White's move: ")
+            board = moveMaker(move,1, board)
+            side = 2
+            t = checkmateCheck()
+            if t == 1:
+                GameRun = False
+                print('white wins')
+            if t == 2:
+                GameRun = False
+                print('black wins')
+        elif side == 2: #black to move
+            move = input("Black's move: ")
+            board = moveMaker(move,2, board)
+            side = 1
+            t = checkmateCheck()
+            if t == 1:
+                GameRun = False
+                print('white wins')
+            if t == 2:
+                GameRun = False
+                print('black wins')
+        
+
+
 
         
     
