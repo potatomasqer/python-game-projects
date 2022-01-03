@@ -2,8 +2,7 @@
 #build a system where i can test each piece individualy
 #incorperate algebraic notation
 #pieces
-
-
+import chess
 board = []
 
 def printB(B):
@@ -71,10 +70,10 @@ def queenCheck(L,side):
     mark += rookCheck(L,side)
     return mark
 def knightCheck(L,side):
-    allPos = [[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[1,2],[1,-2]] # a list of all moves that a knight can do
+    allPos = [[2,1],[2,-1],[-2,1],[-2,-1],[1,2],[1,-2],[-1,2],[-1,-2]] # a list of all moves that a knight can do
     mark = []
     for i in allPos:
-        if (L[0]+i[0] > 0 and L[0]+i[0] < 9) and (L[1]+i[1] > 0 and L[1]+i[1] < 9):
+        if (L[0]+i[0] > 0 and L[0]+i[0] < 9) and (L[1]+i[1] > 0 and L[1]+i[1] < 9): 
             if board[L[1]+i[1]][L[0]+i[0]] == '|__|':
                 mark += [[L[0]+i[0],L[1]+i[1]]]
             else:
@@ -140,6 +139,188 @@ def moveCheck(piece,L,side): #location is [x,y]
 
     #print('legal moves',legalmoves) #debug stuff
     return legalmoves
+
+def evaluate(aiBoard):
+    pawntable = [
+        0, 0, 0, 0, 0, 0, 0, 0,
+        5, 10, 10, -20, -20, 10, 10, 5,
+        5, -5, -10, 0, 0, -10, -5, 5,
+        0, 0, 0, 20, 20, 0, 0, 0,
+        5, 5, 10, 25, 25, 10, 5, 5,
+        10, 10, 20, 30, 30, 20, 10, 10,
+        50, 50, 50, 50, 50, 50, 50, 50,
+        0, 0, 0, 0, 0, 0, 0, 0]
+
+    knightstable = [
+        -50, -40, -30, -30, -30, -30, -40, -50,
+        -40, -20, 0, 5, 5, 0, -20, -40,
+        -30, 5, 10, 15, 15, 10, 5, -30,
+        -30, 0, 15, 20, 20, 15, 0, -30,
+        -30, 5, 15, 20, 20, 15, 5, -30,
+        -30, 0, 10, 15, 15, 10, 0, -30,
+        -40, -20, 0, 0, 0, 0, -20, -40,
+        -50, -40, -30, -30, -30, -30, -40, -50]
+    bishopstable = [
+        -20, -10, -10, -10, -10, -10, -10, -20,
+        -10, 5, 0, 0, 0, 0, 5, -10,
+        -10, 10, 10, 10, 10, 10, 10, -10,
+        -10, 0, 10, 10, 10, 10, 0, -10,
+        -10, 5, 5, 10, 10, 5, 5, -10,
+        -10, 0, 5, 10, 10, 5, 0, -10,
+        -10, 0, 0, 0, 0, 0, 0, -10,
+        -20, -10, -10, -10, -10, -10, -10, -20]
+    rookstable = [
+        0, 0, 0, 5, 5, 0, 0, 0,
+        -5, 0, 0, 0, 0, 0, 0, -5,
+        -5, 0, 0, 0, 0, 0, 0, -5,
+        -5, 0, 0, 0, 0, 0, 0, -5,
+        -5, 0, 0, 0, 0, 0, 0, -5,
+        -5, 0, 0, 0, 0, 0, 0, -5,
+        5, 10, 10, 10, 10, 10, 10, 5,
+        0, 0, 0, 0, 0, 0, 0, 0]
+    queenstable = [
+        -20, -10, -10, -5, -5, -10, -10, -20,
+        -10, 0, 0, 0, 0, 0, 0, -10,
+        -10, 5, 5, 5, 5, 5, 0, -10,
+        0, 0, 5, 5, 5, 5, 0, -5,
+        -5, 0, 5, 5, 5, 5, 0, -5,
+        -10, 0, 5, 5, 5, 5, 0, -10,
+        -10, 0, 0, 0, 0, 0, 0, -10,
+        -20, -10, -10, -5, -5, -10, -10, -20]
+    kingstable = [
+        20, 30, 10, 0, 0, 10, 30, 20,
+        20, 20, 0, 0, 0, 0, 20, 20,
+        -10, -20, -20, -20, -20, -20, -20, -10,
+        -20, -30, -30, -40, -40, -30, -30, -20,
+        -30, -40, -40, -50, -50, -40, -40, -30,
+        -30, -40, -40, -50, -50, -40, -40, -30,
+        -30, -40, -40, -50, -50, -40, -40, -30,
+        -30, -40, -40, -50, -50, -40, -40, -30]
+    #checkmate and stalemate
+    if aiBoard.is_checkmate():
+        if aiBoard.turn:
+            return -9999
+        else:
+            return 9999
+    if aiBoard.is_stalemate():
+            return 0
+    if aiBoard.is_insufficient_material():
+            return 0
+    
+    #material count
+    wp = len(aiBoard.pieces(chess.PAWN, chess.WHITE))
+    bp = len(aiBoard.pieces(chess.PAWN, chess.BLACK))
+    wn = len(aiBoard.pieces(chess.KNIGHT, chess.WHITE))
+    bn = len(aiBoard.pieces(chess.KNIGHT, chess.BLACK))
+    wb = len(aiBoard.pieces(chess.BISHOP, chess.WHITE))
+    bb = len(aiBoard.pieces(chess.BISHOP, chess.BLACK))
+    wr = len(aiBoard.pieces(chess.ROOK, chess.WHITE))
+    br = len(aiBoard.pieces(chess.ROOK, chess.BLACK))
+    wq = len(aiBoard.pieces(chess.QUEEN, chess.WHITE))
+    bq = len(aiBoard.pieces(chess.QUEEN, chess.BLACK))
+    #calculate the scores
+    #dont ask me whats going on here. we calculating matterial for the current slice or something
+    material = 100 * (wp - bp) + 320 * (wn - bn) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
+    pawnsq = sum([pawntable[i] for i in aiBoard.pieces(chess.PAWN, chess.WHITE)])
+    pawnsq = pawnsq + sum([-pawntable[chess.square_mirror(i)]
+                        for i in aiBoard.pieces(chess.PAWN, chess.BLACK)])
+    knightsq = sum([knightstable[i] for i in aiBoard.pieces(chess.KNIGHT, chess.WHITE)])
+    knightsq = knightsq + sum([-knightstable[chess.square_mirror(i)]
+                            for i in aiBoard.pieces(chess.KNIGHT, chess.BLACK)])
+    bishopsq = sum([bishopstable[i] for i in aiBoard.pieces(chess.BISHOP, chess.WHITE)])
+    bishopsq = bishopsq + sum([-bishopstable[chess.square_mirror(i)]
+                            for i in aiBoard.pieces(chess.BISHOP, chess.BLACK)])
+    rooksq = sum([rookstable[i] for i in aiBoard.pieces(chess.ROOK, chess.WHITE)])
+    rooksq = rooksq + sum([-rookstable[chess.square_mirror(i)]
+                        for i in aiBoard.pieces(chess.ROOK, chess.BLACK)])
+    queensq = sum([queenstable[i] for i in aiBoard.pieces(chess.QUEEN, chess.WHITE)])
+    queensq = queensq + sum([-queenstable[chess.square_mirror(i)]
+                            for i in aiBoard.pieces(chess.QUEEN, chess.BLACK)])
+    kingsq = sum([kingstable[i] for i in aiBoard.pieces(chess.KING, chess.WHITE)])
+    kingsq = kingsq + sum([-kingstable[chess.square_mirror(i)]
+                        for i in aiBoard.pieces(chess.KING, chess.BLACK)])
+    #evaluate our math
+    eval = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq
+    if aiBoard.turn:
+        return eval
+    else:
+        return -eval
+
+# Searching the best move using minimax and alphabeta algorithm with negamax implementation
+def alphabeta(alpha, beta, depthleft,aiBoard):
+    bestscore = -9999
+    if (depthleft == 0):
+        return quiesce(alpha, beta,aiBoard)
+    for move in aiBoard.legal_moves:
+        aiBoard.push(move)
+        score = -alphabeta(-beta, -alpha, depthleft - 1,aiBoard)
+        aiBoard.pop()
+        if (score >= beta):
+            return score
+        if (score > bestscore):
+            bestscore = score
+        if (score > alpha):
+            alpha = score
+    return bestscore
+
+def quiesce(alpha, beta,aiBoard):
+    stand_pat = evaluate(aiBoard)
+    if (stand_pat >= beta):
+        return beta
+    if (alpha < stand_pat):
+        alpha = stand_pat
+
+    for move in aiBoard.legal_moves:
+        if aiBoard.is_capture(move):
+            aiBoard.push(move)
+            score = -quiesce(-beta, -alpha,aiBoard)
+            aiBoard.pop()
+
+            if (score >= beta):
+                return beta
+            if (score > alpha):
+                alpha = score
+    return alpha
+
+def AiCore(Mlist,depth): #move list, ai side, current turn
+    #mostly written by Ansh Gaikwad
+    #https://medium.com/dscvitpune/lets-create-a-chess-ai-8542a12afef
+
+    #set up piece square tables 
+    #make board up to date
+    #part i added
+    aiBoard = chess.Board()
+    for m in Mlist:
+        aiBoard.push_san(m)
+    #print(aiBoard)
+    print('thinking')
+    try:
+        move = chess.polyglot.MemoryMappedReader("C:/Users/your_path/books/human.bin").weighted_choice(aiBoard).move
+        # move = chess.polyglot.MemoryMappedReader("C:/Users/your_path/books/computer.bin").weighted_choice(aiBoard).move
+        # move = chess.polyglot.MemoryMappedReader("C:/Users/your_path/books/pecg_book.bin").weighted_choice(aiBoard).move
+        return move
+    except:
+        bestMove = chess.Move.null()
+        bestValue = -99999
+        alpha = -100000
+        beta = 100000
+        for move in aiBoard.legal_moves:
+            aiBoard.push(move)
+            aiBoardValue = -alphabeta(-beta, -alpha, depth - 1,aiBoard)
+            #print(aiBoard,'\n',aiBoardValue)
+            if aiBoardValue > bestValue:
+                bestValue = aiBoardValue
+                bestMove = move
+            if (aiBoardValue > alpha):
+                alpha = aiBoardValue
+            aiBoard.pop()
+        print(bestMove,'best move')
+        return bestMove
+
+
+    
+
+
 
 
 def letertoNum(l):
@@ -220,7 +401,7 @@ def moveMaker(move,side,board):
         legal.index(end)
         #valid move
         board[start[1]][start[0]] = '|__|'
-        board[end[1]][end[0]] = Spiece
+        board[end[1]][end[0]] = Spiece #set board to piece
     except:
         print('illegal move')
         if side == 1: move = input("White's move: ")
@@ -247,13 +428,16 @@ def checkmateCheck():
 GameRun = True
 print('chess lol')
 print('every move uses the position of the piece and where its going. ex e4e5. no need to spesify what the piece is')
-p = input('type run to start: ')
+p = input('type run to start a normal match. type ai to fight against an ai: ')
 mode = 0
 for i in p: #spliting up a string
     if i == 't':
         mode = 2
     if i == 'r' or i == 'R':
         mode = 1
+    if i == 'a' or i == 'A':
+        mode = 3
+        print('make sure your moves are in perfect algebraic format. else this crashes')
     
 
 if mode == 0:
@@ -266,13 +450,14 @@ if mode == 2:
 else: board = makeNewB()
 
 side = 1
+moveList = []
 while GameRun:
     if mode == 2:
         printB(board)
         move = input('whats your move: ')
         print(Translator(move))
         board = moveMaker(move,1, board)
-    else: #starts the game
+    elif mode == 1: #starts a normal game
         printB(board)
         if side == 1: #white to move
             move = input("White's move: ")
@@ -296,6 +481,33 @@ while GameRun:
             if t == 2:
                 GameRun = False
                 print('black wins')
+    else: #against ai. player is white
+        printB(board)
+        if side == 1: #white to move
+            move = input("White's move: ")
+            moveList += [move]
+            board = moveMaker(move,1, board)
+            side = 2
+            t = checkmateCheck()
+            if t == 1:
+                GameRun = False
+                print('white wins')
+            if t == 2:
+                GameRun = False
+                print('black wins')
+        elif side == 2: #black to move ai
+            move = AiCore(moveList,2)
+            moveList += [str(move)] #we use the str of move to get rid of the move.from_uci() thing
+            board = moveMaker(str(move),2, board)
+            side = 1
+            t = checkmateCheck()
+            if t == 1:
+                GameRun = False
+                print('white wins')
+            if t == 2:
+                GameRun = False
+                print('black wins')
+
         
 
 
