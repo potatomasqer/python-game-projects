@@ -5,36 +5,38 @@
 import chess
 
 board = chess.Board()
+showBoard:list = []
+tshowBoard = []
 
 def evaluate():
     pawntable = [
-        0, 0, 0, 0, 0, 0, 0, 0,
-        5, 10, 10, -20, -20, 10, 10, 5,
-        5, -5, -10, 0, 0, -10, -5, 5,
-        0, 0, 0, 20, 20, 0, 0, 0,
-        5, 5, 10, 25, 25, 10, 5, 5,
-        10, 10, 20, 30, 30, 20, 10, 10,
-        50, 50, 50, 50, 50, 50, 50, 50,
-        0, 0, 0, 0, 0, 0, 0, 0]
+         0,  0,  0,  0,  0,  0,  0,  0,
+            50, 50, 50, 50, 50, 50, 50, 50,
+            10, 10, 20, 30, 30, 20, 10, 10,
+            5,  5, 10, 27, 27, 10,  5,  5,
+            0,  0,  0, 25, 25,  0,  0,  0,
+            5, -5,-10,  0,  0,-10, -5,  5,
+            5, 10, 10,-25,-25, 10, 10,  5,
+            0,  0,  0,  0,  0,  0,  0,  0]
 
     knightstable = [
-        -50, -40, -30, -30, -30, -30, -40, -50,
-        -40, -20, 0, 5, 5, 0, -20, -40,
-        -30, 5, 10, 15, 15, 10, 5, -30,
-        -30, 0, 15, 20, 20, 15, 0, -30,
-        -30, 5, 15, 20, 20, 15, 5, -30,
-        -30, 0, 10, 15, 15, 10, 0, -30,
-        -40, -20, 0, 0, 0, 0, -20, -40,
-        -50, -40, -30, -30, -30, -30, -40, -50]
+        -50,-40,-30,-30,-30,-30,-40,-50,
+        -40,-20,  0,  0,  0,  0,-20,-40,
+        -30,  0, 10, 15, 15, 10,  0,-30,
+        -30,  5, 15, 20, 20, 15,  5,-30,
+        -30,  0, 15, 20, 20, 15,  0,-30,
+        -30,  5, 10, 15, 15, 10,  5,-30,
+        -40,-20,  0,  5,  5,  0,-20,-40,
+        -50,-40,-20,-30,-30,-20,-40,-50]
     bishopstable = [
-        -20, -10, -10, -10, -10, -10, -10, -20,
-        -10, 5, 0, 0, 0, 0, 5, -10,
-        -10, 10, 10, 10, 10, 10, 10, -10,
-        -10, 0, 10, 10, 10, 10, 0, -10,
-        -10, 5, 5, 10, 10, 5, 5, -10,
-        -10, 0, 5, 10, 10, 5, 0, -10,
-        -10, 0, 0, 0, 0, 0, 0, -10,
-        -20, -10, -10, -10, -10, -10, -10, -20]
+        -20,-10,-10,-10,-10,-10,-10,-20,
+        -10,  0,  0,  0,  0,  0,  0,-10,
+        -10,  0,  5, 10, 10,  5,  0,-10,
+        -10,  5,  5, 10, 10,  5,  5,-10,
+        -10,  0, 10, 10, 10, 10,  0,-10,
+        -10, 10, 10, 10, 10, 10, 10,-10,
+        -10,  5,  0,  0,  0,  0,  5,-10,
+        -20,-10,-40,-10,-10,-40,-10,-20]
     rookstable = [
         0, 0, 0, 5, 5, 0, 0, 0,
         -5, 0, 0, 0, 0, 0, 0, -5,
@@ -54,14 +56,14 @@ def evaluate():
         -10, 0, 0, 0, 0, 0, 0, -10,
         -20, -10, -10, -5, -5, -10, -10, -20]
     kingstable = [
-        20, 30, 10, 0, 0, 10, 30, 20,
-        20, 20, 0, 0, 0, 0, 20, 20,
-        -10, -20, -20, -20, -20, -20, -20, -10,
+        -30, -40, -40, -50, -50, -40, -40, -30,
+        -30, -40, -40, -50, -50, -40, -40, -30,
+        -30, -40, -40, -50, -50, -40, -40, -30,
+        -30, -40, -40, -50, -50, -40, -40, -30,
         -20, -30, -30, -40, -40, -30, -30, -20,
-        -30, -40, -40, -50, -50, -40, -40, -30,
-        -30, -40, -40, -50, -50, -40, -40, -30,
-        -30, -40, -40, -50, -50, -40, -40, -30,
-        -30, -40, -40, -50, -50, -40, -40, -30]
+        -10, -20, -20, -20, -20, -20, -20, -10, 
+        20,  20,   0,   0,   0,   0,  20,  20,
+        20,  30,  10,   0,   0,  10,  30,  20]
     #checkmate and stalemate
     if board.is_checkmate():
         if board.turn:
@@ -113,13 +115,13 @@ def evaluate():
         return -eval
 
 # Searching the best move using minimax and alphabeta algorithm with negamax implementation
-def alphabeta(alpha, beta, depthleft,board):
+def alphabeta(alpha, beta, depthleft):
     bestscore = -9999
     if (depthleft == 0):
-        return quiesce(alpha, beta,board)
+        return quiesce(alpha, beta)
     for move in board.legal_moves:
         board.push(move)
-        score = -alphabeta(-beta, -alpha, depthleft - 1,board)
+        score = -alphabeta(-beta, -alpha, depthleft - 1)
         board.pop()
         if (score >= beta):
             return score
@@ -129,8 +131,8 @@ def alphabeta(alpha, beta, depthleft,board):
             alpha = score
     return bestscore
 
-def quiesce(alpha, beta,board):
-    stand_pat = evaluate(board)
+def quiesce(alpha, beta):
+    stand_pat = evaluate()
     if (stand_pat >= beta):
         return beta
     if (alpha < stand_pat):
@@ -139,7 +141,7 @@ def quiesce(alpha, beta,board):
     for move in board.legal_moves:
         if board.is_capture(move):
             board.push(move)
-            score = -quiesce(-beta, -alpha,board)
+            score = -quiesce(-beta, -alpha)
             board.pop()
 
             if (score >= beta):
@@ -168,7 +170,7 @@ def AiCore(depth): #move list, ai side, current turn
         beta = 100000
         for move in board.legal_moves:
             board.push(move)
-            boardValue = -alphabeta(-beta, -alpha, depth - 1,board)
+            boardValue = -alphabeta(-beta, -alpha, depth - 1)
             #print(board,'\n',boardValue)
             if boardValue > bestValue:
                 bestValue = boardValue
@@ -178,12 +180,80 @@ def AiCore(depth): #move list, ai side, current turn
             board.pop()
         print(bestMove,'best move')
         return bestMove
+    
+def putInShow(lis,piece):
+    for i in lis:
+        tshowBoard[i] = piece
+
+def printShow():
+    wp = list(board.pieces(chess.PAWN, chess.WHITE))
+    bp = list(board.pieces(chess.PAWN, chess.BLACK))
+    wn = list(board.pieces(chess.KNIGHT, chess.WHITE))
+    bn = list(board.pieces(chess.KNIGHT, chess.BLACK))
+    wb = list(board.pieces(chess.BISHOP, chess.WHITE))
+    bb = list(board.pieces(chess.BISHOP, chess.BLACK))
+    wr = list(board.pieces(chess.ROOK, chess.WHITE))
+    br = list(board.pieces(chess.ROOK, chess.BLACK))
+    wq = list(board.pieces(chess.QUEEN, chess.WHITE))
+    bq = list(board.pieces(chess.QUEEN, chess.BLACK))
+    wk = list(board.pieces(chess.KING, chess.WHITE))
+    bk = list(board.pieces(chess.KING, chess.BLACK))
+    
+    tshowBoard.clear()
+    for _ in range(64):
+        tshowBoard.append('.')
+    putInShow(wp,'P')
+    putInShow(bp,'p')
+    putInShow(wn,'N')
+    putInShow(bn,'n')
+    putInShow(wb,'B')
+    putInShow(bb,'b')
+    putInShow(wr,'R')
+    putInShow(br,'r')
+    putInShow(wq,'Q')
+    putInShow(bq,'q')
+    putInShow(wk,'k')
+    putInShow(bk,'K')
+    #print(tshowBoard)
+
+    showBoard = []
+    #add template
+    showBoard.append(['.','a','b','c','d','e','f','g','h'])
+    showBoard.append(['1'])
+    showBoard.append(['2'])
+    showBoard.append(['3'])
+    showBoard.append(['4'])
+    showBoard.append(['5'])
+    showBoard.append(['6'])
+    showBoard.append(['7'])
+    showBoard.append(['8'])
+    
+    for pn in range(len(tshowBoard)):
+        if pn < 8:
+            showBoard[1].append(tshowBoard[pn])
+        if pn > 7 and pn < 16:
+            showBoard[2].append(tshowBoard[pn])
+        if pn > 15 and pn < 24:
+            showBoard[3].append(tshowBoard[pn])
+        if pn > 23 and pn < 32:
+            showBoard[4].append(tshowBoard[pn])
+        if pn > 31 and pn < 40:
+            showBoard[5].append(tshowBoard[pn])
+        if pn > 39 and pn < 48:
+            showBoard[6].append(tshowBoard[pn])
+        if pn > 47 and pn < 56:
+            showBoard[7].append(tshowBoard[pn])
+        if pn > 55:
+            showBoard[8].append(tshowBoard[pn])
+
+    for i in showBoard:
+        print(i)
 
 def moveCheck(Move):
     try:
-        board.push(Move)
+        board.push_uci(Move)
     except:
-        move = print('try again: ')
+        move = input('try again: ')
         moveCheck(move)
 
 GameRun = True
@@ -196,20 +266,20 @@ for i in p: #spliting up a string
         mode = 1
     if i == 'a' or i == 'A':
         mode = 2
-        print('make sure your moves are in perfect algebraic format. else this crashes')
+    if i == 't' or i == 'T':
+        mode = 3
+    if i == 'v' or i == 'V':
+        mode = 4
     
-
 if mode == 0:
     print('idiot')
     GameRun = False
 
-
 side = 1
-moveList = []
 turn = 0
 while GameRun:
     if mode == 1: #starts a normal game
-        print(board)
+        printShow()
         if side == 1: #white to move
             move = input("White's move: ")
             moveCheck(move)
@@ -231,16 +301,16 @@ while GameRun:
                 GameRun = False
                 print('nobody wins')  
     elif mode == 2: #against ai. player is white
-        print(board)
+        printShow()
         turn += 1
         if side == 1: #white to move
             move = input("White's move: ")
             moveCheck(move)
             side = 2
-            if board.is_checkmate:
+            if board.is_checkmate == True:
                 GameRun = False
                 print('white wins')
-            if board.is_stalemate:
+            if board.is_stalemate == True:
                 GameRun = False
                 print('nobody wins')  
         elif side == 2 and GameRun == True: #black to move (ai)
@@ -248,11 +318,42 @@ while GameRun:
                 depth = 3
             else: depth = 2
             move = AiCore(depth)
-            moveCheck(move)
+            moveCheck(str(move))
             side = 1
-            if board.is_checkmate:
+            if board.is_checkmate == True:
                 GameRun = False
                 print('black wins')
-            if board.is_stalemate:
+            if board.is_stalemate == True:
                 GameRun = False
-                print('nobody wins')  
+                print('nobody wins')
+    elif mode == 4:
+        printShow()
+        if side == 1: #white to move
+            if turn < 5 or turn > 15:
+                depth = 3
+            else: depth = 2
+            move = AiCore(depth)
+            moveCheck(str(move))
+            side = 2
+            if board.is_checkmate == True:
+                GameRun = False
+                print('black wins')
+            if board.is_stalemate == True:
+                GameRun = False
+                print('nobody wins') 
+        elif side == 2 and GameRun == True: #black to move (ai)
+            if turn < 5 or turn > 15:
+                depth = 3
+            else: depth = 2
+            move = AiCore(depth)
+            moveCheck(str(move))
+            side = 1
+            if board.is_checkmate == True:
+                GameRun = False
+                print('black wins')
+            if board.is_stalemate == True:
+                GameRun = False
+                print('nobody wins')
+    elif mode == 3:
+        printShow()
+        GameRun = False
