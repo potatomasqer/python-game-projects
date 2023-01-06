@@ -6,7 +6,8 @@ possiableWords = open("dictionary.txt")
 lists = BetterLists.BetterLists({})
 lists.newList('Words',possiableWords.readlines()) #put into a custom dictionary for better prossing
 currentWord = "AAAAA"
-
+gamesWon = 0
+gamesLost = 0
 
 #how does wordle work
 #you start with a blank text box that you can put a 5 letter word in
@@ -66,8 +67,11 @@ while Run:
             mode = 1
         if i == 'i' or i == 'I':
             mode = 2
-        if i == 'e' or i == 'e':
+        if i == '3' or i == 3:
+            mode = 3
+        if i == 'e' or i == 'E':
             Run = False
+        
 
     currentWord = lists.Random('Words') # get a random word
     UsedLetters = []
@@ -102,6 +106,8 @@ while Run:
             if InGame == True:
                 print("Used Letters: " , UsedLetters)
                 AtemptsLeft -= 1
+
+
         if mode == 2:
             print(str(AtemptsLeft) + " Attempts left")
             output = ''
@@ -109,12 +115,16 @@ while Run:
             if AtemptsLeft == 6:
                 guess = 'crane\n'
             else:
+                #exclude
                 lists.newList('excluded',lists.ExcludeByLetters('Words',IncorrectLetters))
                 if len(correctLetters) > 0:
+                    #find
                     lists.newList('Ai',lists.FindByLetters('excluded',correctLetters))
+                    #guess
                     lists.newList('Ai',lists.ExcludeByPositions('Ai',correctPositions,incorrectPositions))
                     guess = lists.Random('Ai')
                 else:
+                    #guess
                     lists.newList('Ai',lists.listOfLists['excluded'])
                     guess = lists.Random('Ai')
                 
@@ -127,6 +137,63 @@ while Run:
             if InGame == True:
                 AtemptsLeft -= 1
 
+
+        if mode == 3:
+            c = 50
+            x = 0
+            gamesWon = 0
+            gamesLost = 0
+            while x <= c: #number of games
+                while InGame:
+                    print(str(AtemptsLeft) + " Attempts left")
+                    output = ''
+                    guess = ''
+                    if AtemptsLeft == 6:
+                        guess = 'crane\n'
+                    else:
+                        #exclude
+                        lists.newList('excluded',lists.ExcludeByLetters('Words',IncorrectLetters))
+                        if len(correctLetters) > 0:
+                            #find
+                            lists.newList('Ai',lists.FindByLetters('excluded',correctLetters))
+                            #guess
+                            lists.newList('Ai',lists.ExcludeByPositions('Ai',correctPositions,incorrectPositions))
+                            guess = lists.Random('Ai')
+                        else:
+                            #guess
+                            lists.newList('Ai',lists.listOfLists['excluded'])
+                            guess = lists.Random('Ai')
+                        
+                    #give it back to the game to prossess
+                    print(guess.replace('\n',''))
+                    output = Check(guess.replace('\n',''),correctLetters,IncorrectLetters,correctPositions,incorrectPositions)
+                    print(output)
+                    UsedLetters = Used(UsedLetters)
+                    if not EndCheck(guess):
+                        InGame = False
+                        if guess.replace('\n','') == currentWord.replace('\n',''):
+                            gamesWon += 1
+                        else: gamesLost += 1
+
+                    if InGame == True:
+                        AtemptsLeft -= 1
+                        
+                print("|****************|\nWins " + str(gamesWon) + " Losses " + str(gamesLost) + "\n")
+                currentWord = lists.Random('Words') # get a random word
+                UsedLetters = []
+                AtemptsLeft = 6
+                correctLetters = []
+                IncorrectLetters = []
+                correctLetters = []
+                correctPositions = []
+                incorrectPositions = []
+                InGame = True
+                x += 1
+            Run = False
+            InGame = False
+
+
+            
             
 
 

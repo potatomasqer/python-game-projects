@@ -15,16 +15,21 @@ class BetterLists:
                 c += 1
                 for a in i:
                     if a.lower() == Letter.lower():
-                        try:loc.index[c] #just in case a word has more than one of the same letter
-                        except:loc += [c]
+                        loc += [c]
             found = []
             for i in loc:
-                try: found.index(data[i])
+                try: found.index(data[i]) #just in case a word shows up twice
                 except: found += [data[i]]
+            
+            if len(found) == 0:
+                return ValueError
             return found
         except: return ValueError
     def Random(self,Name:str):
-        return self.listOfLists[Name][randint(0,len(self.listOfLists[Name])-1)]
+        if len(self.listOfLists[Name]) > 1:
+            return self.listOfLists[Name][randint(0,len(self.listOfLists[Name])-1)]
+        elif len(self.listOfLists[Name]) != 0: return self.listOfLists[Name][0]
+        else:  return self.listOfLists["Found"][randint(0,len(self.listOfLists["Found"])-1)]
     def Find(self,Name:str,item):
         try:
             position = self.listOfLists[Name].index(item)
